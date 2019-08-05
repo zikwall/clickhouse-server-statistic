@@ -43,7 +43,11 @@ class AuthController extends BaseController
 
         return $this->response([
             'token' => $jwt['token'],
-            'token_expired' => date('Y-m-d H:i:s', $jwt['payload']['exp'])
+            'token_expired' => date('Y-m-d H:i:s', $jwt['payload']['exp']),
+            'user' => [
+                'username' => $user->username,
+                'email' => $user->email,
+            ]
         ], 200);
     }
 
