@@ -1,5 +1,6 @@
 web-local.php
 main-local.php
+console-local.php
 test-local.php
 test.php
 test_db.php

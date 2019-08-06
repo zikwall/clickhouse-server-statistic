@@ -38,3 +38,4 @@ composer.lock
 
 # local config files
 /config/web-local.php
+/config/console-local.php
