@@ -2,13 +2,11 @@
 
 namespace app\modules\rest\controllers\auth;
 
-use app\modules\rest\Module;
 use app\modules\user\models\LoginForm;
 use app\modules\rest\components\BaseController;
 use Firebase\JWT\JWT;
 use Yii;
 use yii\web\IdentityInterface;
-use yii\web\Response;
 
 class AuthController extends BaseController
 {

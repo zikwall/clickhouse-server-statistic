@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use sizeg\jwt\JwtHttpBearerAuth;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -20,13 +19,6 @@ class SiteController extends Controller
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-
-        $behaviors['authenticator'] = [
-            'class' => JwtHttpBearerAuth::class,
-            'optional' => [
-                'login', 'index'
-            ],
-        ];
 
         return  ArrayHelper::merge($behaviors, [
             'access' => [
