@@ -35,3 +35,6 @@ tests/_support/_generated
 /runtime
 /web/assets
 composer.lock
+
+# local config files
+/config/web-local.php
