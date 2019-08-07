@@ -79,7 +79,7 @@ class BaseController extends \yii\rest\Controller
             $token = $matches[1];
 
             try {
-                $validData = JWT::decode($token, $this->getModule()->jwtKey, ['HS512']);
+                $validData = JWT::decode($token, $this->getModule()->jwtKey);
 
                 if (!empty($validData->uid)) {
                     return User::find()->where(['id' => $validData->uid])->one();
