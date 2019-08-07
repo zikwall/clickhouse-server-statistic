@@ -49,15 +49,6 @@ class AuthController extends BaseController
         ], 200);
     }
 
-    public function actionPermissions()
-    {
-        return $this->asJson([
-           'permissions' => [
-               Yii::$app->getUser()->getIdentity()->username
-           ]
-        ]);
-    }
-
     /**
      * @param IdentityInterface $user
      * @return array
