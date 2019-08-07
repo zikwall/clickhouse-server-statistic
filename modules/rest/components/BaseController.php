@@ -87,7 +87,7 @@ class BaseController extends \yii\rest\Controller
                 $validData = JWT::decode($token, $this->getModule()->jwtKey, ['HS256']);
 
                 if (!empty($validData->uid)) {
-                    return User::find()->where(['id' => $validData->uid])->one();
+                    return $this->user = User::find()->where(['id' => $validData->uid])->one();
                 }
             } catch (\Exception $e) {
                 throw new HttpException(401, $e->getMessage());
