@@ -12,6 +12,7 @@ class Bootstrap implements BootstrapInterface
             // Auth
             ['pattern' => 'api/v1/auth/login/', 'route' => 'rest/auth/auth/index', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/data/get/', 'route' => 'rest/data/data/index', 'verb' => ['GET']],
+            ['pattern' => 'api/v1/auth/permissions/', 'route' => 'rest/auth/auth/permissions', 'verb' => ['GET']],
         ], true);
     }
 }
