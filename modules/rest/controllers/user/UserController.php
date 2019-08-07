@@ -1,5 +1,5 @@
 <?php
-namespace app\modules\rest\controllers\data;
+namespace app\modules\rest\controllers\user;
 
 use app\modules\rest\components\BaseController;
 
