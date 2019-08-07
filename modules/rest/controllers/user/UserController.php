@@ -10,7 +10,7 @@ class UserController extends BaseController
     {
         return $this->asJson([
             'permissions' => [
-                Yii::$app->getUser()->getIdentity()->username
+                $this->getUser()->username
             ]
         ]);
     }

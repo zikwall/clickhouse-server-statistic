@@ -15,6 +15,11 @@ class BaseController extends \yii\rest\Controller
 
     public static $moduleId = '';
 
+    /**
+     * @var User
+     */
+    private $user;
+
     public function init() : void
     {
         parent::init();
@@ -107,5 +112,13 @@ class BaseController extends \yii\rest\Controller
         }
 
         return false;
+    }
+
+    /**
+     * @return User|bool
+     */
+    final public function getUser()
+    {
+        return $this->user instanceof User ? $this->user : false;
     }
 }
