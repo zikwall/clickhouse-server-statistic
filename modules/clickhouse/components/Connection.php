@@ -46,7 +46,7 @@ class Connection
 
     final protected function checkConnectionOptions() : bool
     {
-        return !empty($this->user) && !empty($this->pass);
+        return empty($this->user) && empty($this->pass);
     }
 
     protected function createServer() : Server
