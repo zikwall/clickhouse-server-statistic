@@ -12,7 +12,7 @@ trait ConnectionTrait
      */
     public function getBuilder()
     {
-        return $this->clickhouse->builder;
+        return $this->builder;
     }
 
     /**
@@ -20,6 +20,6 @@ trait ConnectionTrait
      */
     public function getClient()
     {
-        return $this->clickhouse->client;
+        return $this->client;
     }
 }

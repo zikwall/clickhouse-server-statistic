@@ -26,9 +26,6 @@ $config = [
     'components' => [
         'clickhouse' => [
             'class' => 'app\modules\clickhouse\components\Connection',
-            'host' => '',
-            'port' => '',
-            'user' => '',
             'pass' => '',
             'db' => ''
         ],

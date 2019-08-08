@@ -15,6 +15,8 @@ use yii\base\InvalidConfigException;
  */
 class Connection
 {
+    use ConnectionTrait;
+
     public $host = 'localhost';
     public $port = '8123';
     public $user = 'default';
