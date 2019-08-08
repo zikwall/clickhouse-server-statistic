@@ -36,10 +36,6 @@ class Connection extends Component
 
     public function init()
     {
-        if (!$this->checkConnectionOptions()) {
-            throw new InvalidConfigException('Пожалуйста, укажите правильную конфигурацию!');
-        }
-
         $serverProvider = (new ServerProvider())->addServer($this->createServer());
         $this->client = new Client($serverProvider);
         $this->builder = new Builder($this->client);
