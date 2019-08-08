@@ -6,6 +6,7 @@ use Tinderbox\Clickhouse\Server;
 use Tinderbox\Clickhouse\ServerProvider;
 use Tinderbox\Clickhouse\Client;
 use Tinderbox\ClickhouseBuilder\Query\Builder;
+use yii\base\Component;
 use yii\base\InvalidConfigException;
 
 /**
@@ -13,7 +14,7 @@ use yii\base\InvalidConfigException;
  * @docs for CH query builder @see https://github.com/the-tinderbox/ClickhouseBuilder
  * @docs for CH client @see https://github.com/the-tinderbox/ClickhouseClient
  */
-class Connection
+class Connection extends Component
 {
     use ConnectionTrait;
 
