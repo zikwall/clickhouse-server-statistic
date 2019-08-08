@@ -8,6 +8,7 @@ class Monit extends CHBaseModel
 {
     public static function getExample()
     {
+        // get count users by channels
         $query = self::find()->select(['vcid', raw('count(*) as ctn')])
             ->from('stat')
             ->where('created_at', '>=', mktime(0,0,0))
