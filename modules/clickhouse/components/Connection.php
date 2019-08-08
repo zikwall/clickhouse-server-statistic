@@ -17,11 +17,11 @@ class Connection
 {
     use ConnectionTrait;
 
-    public $host = 'localhost';
-    public $port = '8123';
-    public $user = 'default';
+    public $host;
+    public $port;
+    public $user;
     public $pass;
-    public $db = 'default';
+    public $db;
 
     /**
      * @var Client
