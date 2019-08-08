@@ -26,8 +26,6 @@ $config = [
     'components' => [
         'clickhouse' => [
             'class' => 'app\modules\clickhouse\components\Connection',
-            'pass' => '',
-            'db' => ''
         ],
         'session' => [
             'class' => 'app\modules\user\components\Session',
