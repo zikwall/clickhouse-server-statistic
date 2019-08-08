@@ -19,7 +19,9 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "yiisoft/yii2-authclient": "~2.0",
-        "firebase/php-jwt": "^5.0"
+        "firebase/php-jwt": "^5.0",
+        "the-tinderbox/clickhouse-builder": "^1.2",
+        "the-tinderbox/clickhouse-php-client": "^1.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

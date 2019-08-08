@@ -24,6 +24,14 @@ $config = [
         ]
     ],
     'components' => [
+        'clickhouse' => [
+            'class' => 'app\modules\clickhouse\components\Connection',
+            'host' => '',
+            'port' => '',
+            'user' => '',
+            'pass' => '',
+            'db' => ''
+        ],
         'session' => [
             'class' => 'app\modules\user\components\Session',
             'sessionTable' => 'new_user_http_session',
