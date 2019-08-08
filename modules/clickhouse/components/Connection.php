@@ -35,9 +35,9 @@ class Connection
 
     public function __construct()
     {
-        if (!$this->checkConnectionOptions()) {
+        /*if (!$this->checkConnectionOptions()) {
             throw new InvalidConfigException('Пожалуйста, укажите правильную конфигурацию!');
-        }
+        }*/
 
         $serverProvider = (new ServerProvider())->addServer($this->createServer());
         $this->client = new Client($serverProvider);
