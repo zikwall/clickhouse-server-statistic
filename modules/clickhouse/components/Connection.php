@@ -34,7 +34,7 @@ class Connection extends Component
      */
     public $builder;
 
-    public function __construct()
+    public function init()
     {
         /*if (!$this->checkConnectionOptions()) {
             throw new InvalidConfigException('Пожалуйста, укажите правильную конфигурацию!');
@@ -43,6 +43,8 @@ class Connection extends Component
         $serverProvider = (new ServerProvider())->addServer($this->createServer());
         $this->client = new Client($serverProvider);
         $this->builder = new Builder($this->client);
+
+        return parent::init();
     }
 
     final protected function checkConnectionOptions() : bool
