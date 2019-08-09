@@ -42,7 +42,7 @@ class Monit extends CHBaseModel
         ];
 
         $query = self::find()
-            ->select(['ip', 'created_at', 'COUNT(ip) as countAsn'])
+            ->select(['ip', 'created_at', new Expression('COUNT(ip) as countAsn')])
             ->from('stat')
             ->where('created_at', '>=', DateHelper::getStartOfDay())
             ->groupBy('ip');
