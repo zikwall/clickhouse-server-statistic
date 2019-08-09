@@ -23,8 +23,8 @@ class UserController extends BaseController
 
         return $this->asJson([
             'access' => [
-                'permissions' => $this->getUser()->getUserPermissions()->asArray(),
-                'groups' => $this->getUser()->getGroups()->asArray()
+                'permissions' => $this->getUser()->userPermissions,
+                'groups' => $this->getUser()->groups
             ]
         ]);
     }
