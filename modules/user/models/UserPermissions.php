@@ -55,6 +55,11 @@ class UserPermissions extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
 
+    public function getPermission()
+    {
+        return $this->hasOne(Permissions::className(), ['id' => 'permission_id']);
+    }
+
     public function create() : bool
     {
         if ($this->getIsNewRecord() == false) {
