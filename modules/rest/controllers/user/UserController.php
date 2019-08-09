@@ -15,15 +15,16 @@ class UserController extends BaseController
         return parent::beforeAction($action);
     }
 
-    public function actionPermissions()
+    public function actionAccess()
     {
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
 
         return $this->asJson([
-            'permissions' => [
-                $this->getUser()->username
+            'access' => [
+                'permissions' => $this->getUser()->getUserPermissions()->asArray(),
+                'groups' => $this->getUser()->getGroups()->asArray()
             ]
         ]);
     }

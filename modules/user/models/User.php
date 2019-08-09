@@ -49,7 +49,7 @@ use yii\helpers\ArrayHelper;
  * @property-read Finder $finder
  * @property-read Module $module
  * @property-read Mailer $mailer
- *
+ * @property UserPermissions[] $userPermissions
  * >
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -76,6 +76,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /** @var string Default username regexp */
     public static $usernameRegexp = '/^[-a-zA-Z0-9_\.@]+$/';
+
+    private $_isSystemAdmin = null;
 
     /** @inheritdoc */
     public static function tableName()
@@ -143,6 +145,15 @@ class User extends ActiveRecord implements IdentityInterface
             'passwordRequired' => ['password', 'required', 'on' => ['register']],
             'passwordLength'   => ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
         ];
+    }
+
+    public function isSystemAdmin($cached = true)
+    {
+        if ($this->_isSystemAdmin === null || !$cached) {
+            $this->_isSystemAdmin = ($this->getGroups()->where(['is_admin_group' => '1'])->count() > 0);
+        }
+
+        return $this->_isSystemAdmin;
     }
 
     /**
@@ -220,6 +231,24 @@ class User extends ActiveRecord implements IdentityInterface
                 : false) || in_array($this->username, $this->module->admins);
     }
 
+    public function getGroups()
+    {
+        return $this->hasMany(Group::class, ['id' => 'group_id'])->via('groupUsers');
+    }
+
+    public function getGroupUsers()
+    {
+        return $this->hasMany(GroupUser::class, ['user_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserPermissions()
+    {
+        return $this->hasMany(UserPermissions::className(), ['user_id' => 'id']);
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
@@ -284,7 +313,7 @@ class User extends ActiveRecord implements IdentityInterface
             return false;
         }
 
-        $this->mailer->sendWelcomeMessage($this, null, true);
+        //$this->mailer->sendWelcomeMessage($this, null, true);
         $this->trigger(self::AFTER_CREATE);
 
         return true;
