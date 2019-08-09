@@ -250,10 +250,10 @@ class User extends ActiveRecord implements IdentityInterface
         $userGroups = [];
 
         /**
-         * @var $group Group
+         * @var $ugroup GroupUser
          */
-        foreach ($this->groups as $group) {
-            $userGroups[$group->id] = $group->name;
+        foreach ($this->groups as $ugroup) {
+            $userGroups[$ugroup->group->id] = $ugroup->group->name;
         }
 
         return $userGroups;
