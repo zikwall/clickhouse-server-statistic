@@ -46,7 +46,7 @@ class Monit extends CHBaseModel
             ->from('stat')
             ->where('created_at', '>=', DateHelper::getStartOfDay())
             ->groupBy(['ip', 'created_at'])
-            ->limit(10000);
+            ->limit(100000);
 
         $records = self::execute($query);
 
