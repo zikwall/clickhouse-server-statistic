@@ -231,6 +231,34 @@ class User extends ActiveRecord implements IdentityInterface
                 : false) || in_array($this->username, $this->module->admins);
     }
 
+    public function getPermissionList() : array
+    {
+        $userPermissions = [];
+
+        /**
+         * @var $permission Permissions
+         */
+        foreach ($this->getUser()->userPermissions as $permission) {
+            $userPermissions[$permission->id] = $permission->name;
+        }
+
+        return $userPermissions;
+    }
+
+    public function getGroupList() : array
+    {
+        $userGroups = [];
+
+        /**
+         * @var $group Group
+         */
+        foreach ($this->groups as $group) {
+            $userGroups[$group->id] = $group->name;
+        }
+
+        return $userGroups;
+    }
+
     public function getGroups()
     {
         return $this->hasMany(Group::class, ['id' => 'group_id'])->via('groupUsers');
