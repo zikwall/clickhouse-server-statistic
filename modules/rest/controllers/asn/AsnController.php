@@ -13,6 +13,9 @@ class AsnController extends BaseController
      */
     public function actionExample()
     {
+        ini_set('memory_limit', '2044M');
+        ini_set('max_execution_time', '1000');
+
         return $this->asJson([
             'result' => Monit::asn()
         ]);
