@@ -3,6 +3,10 @@
 namespace app\modules\rest\models;
 
 use app\modules\clickhouse\models\CHBaseModel;
+use app\modules\rest\helpers\DataHelper;
+use app\modules\rest\helpers\DateHelper;
+use GeoIp2\Database\Reader;
+use Tinderbox\ClickhouseBuilder\Query\Expression;
 
 class Monit extends CHBaseModel
 {
@@ -16,5 +20,79 @@ class Monit extends CHBaseModel
             ->groupBy('vcid');
 
         return self::execute($query);
+    }
+
+    /**
+     * @throws \MaxMind\Db\Reader\InvalidDatabaseException
+     */
+    public static function asn()
+    {
+        $reader = new Reader(dirname(dirname(__DIR__)) . '/core/geo/GeoLite2-ASN.mmdb');
+        $cityReader = new Reader(dirname(dirname(__DIR__)) . '/core/geo/GeoLite2-City.mmdb');
+
+        $itemAsn = [
+            'as' => null,
+            'org' => null,
+            'country' => null,
+        ];
+
+        $asnResult = [
+            'ASN' => [],
+            'countOfAsn' => 0
+        ];
+
+        $query = self::find()
+            ->select(['ip', 'created_at', 'countAsn' => new Expression('COUNT(ip)')])
+            ->where('created_at', '>=', DateHelper::getStartOfDay())
+            ->groupBy('ip');
+
+        $records = self::execute($query);
+
+        foreach ($records->getRows() as $record) {
+            if (empty($record['ip'])) {
+                continue;
+            }
+
+            try {
+                $record_as = $reader->ASN($record['ip']);
+                $recordCity = $cityReader->city($record['ip']);
+            } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+                unset($record_as);
+                unset($recordCity);
+            }
+
+            /**
+             * Пропускаем, если не найден ASN
+             */
+            if (!isset($record_as)) {
+                continue;
+            }
+
+            $itemAsn = [
+                'as' => $record_as->autonomousSystemNumber,
+                'org' => $record_as->autonomousSystemOrganization,
+            ];
+
+            /**
+             * Дополнительная информация
+             */
+            if (isset($recordCity)) {
+                $itemAsn['city'] = $recordCity->city->name;
+                $itemAsn['country'] = $recordCity->country->name;
+                $asnResult['countOfAsn']++;
+            }
+
+            if (!isset($asnResult['ASN'][$itemAsn['as']])) {
+                $asnResult['ASN'][$itemAsn['as']]['asn'] = $itemAsn;
+                $asnResult['ASN'][$itemAsn['as']]['count'] = 0;
+            }
+
+            $asnResult['ASN'][$itemAsn['as']]['data'][] = $record['ip'];
+            $asnResult['ASN'][$itemAsn['as']]['count'] += 1;
+        }
+
+        DataHelper::sortByColumn($asnResult['ASN'], 'count', SORT_DESC);
+
+        return $asnResult;
     }
 }

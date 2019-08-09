@@ -21,7 +21,8 @@
         "yiisoft/yii2-authclient": "~2.0",
         "firebase/php-jwt": "^5.0",
         "the-tinderbox/clickhouse-builder": "^1.2",
-        "the-tinderbox/clickhouse-php-client": "^1.2"
+        "the-tinderbox/clickhouse-php-client": "^1.2",
+        "geoip2/geoip2": "~2.0"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
