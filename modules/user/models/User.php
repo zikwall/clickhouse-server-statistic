@@ -239,7 +239,7 @@ class User extends ActiveRecord implements IdentityInterface
          * @var $permission UserPermissions
          */
         foreach ($this->userPermissions as $permission) {
-            $userPermissions[$permission->permission->id] = $permission->permission->name;
+            $userPermissions[] = $permission->permission->permission;
         }
 
         return $userPermissions;
