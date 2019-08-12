@@ -58,6 +58,11 @@ class BaseController extends \yii\rest\Controller
      */
     public function beforeAction($action) : bool
     {
+        if (Yii::$app->getRequest()->getMethod() === 'OPTIONS') {
+            Yii::$app->getResponse()->getHeaders()->set('Allow', 'POST GET PUT');
+            Yii::$app->end();
+        }
+
         $user = $this->authWithJwt();
 
         if ($user === null && $this->getModule()->enableBasicAuth) {
