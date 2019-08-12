@@ -19,12 +19,7 @@ class ResponseHandler
     /**
      * @param Response $response
      */
-    public function afterSend( Response $response )
-    {
-        if (Yii::$app->request->getIsOptions()) {
-            return Yii::$app->end(200);
-        }
-    }
+    public function afterSend( Response $response ) : void {}
 
     /**
      * @param Response $response
