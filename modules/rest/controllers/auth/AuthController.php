@@ -15,17 +15,16 @@ class AuthController extends BaseController
         return parent::behaviors();
     }
 
-    public function beforeAction($action) : bool
-    {
-        return parent::beforeAction($action);
-    }
-
     /**
      * @return array
      * @throws \yii\base\InvalidConfigException
      */
     public function actionIndex()
     {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
         $post = json_decode(Yii::$app->getRequest()->getRawBody(), true);
         $user = static::authByUserAndPassword($post['username'], $post['password']);
 
