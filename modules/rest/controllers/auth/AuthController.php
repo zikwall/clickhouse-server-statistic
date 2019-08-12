@@ -10,6 +10,11 @@ use yii\web\IdentityInterface;
 
 class AuthController extends BaseController
 {
+    public function behaviors()
+    {
+        return parent::behaviors();
+    }
+
     public function beforeAction($action) : bool
     {
         return true;
