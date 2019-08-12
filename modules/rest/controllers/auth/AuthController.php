@@ -17,7 +17,7 @@ class AuthController extends BaseController
 
     public function beforeAction($action) : bool
     {
-        return true;
+        return parent::beforeAction($action);
     }
 
     /**
