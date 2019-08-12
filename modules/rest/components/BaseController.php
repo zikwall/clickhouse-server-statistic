@@ -36,6 +36,15 @@ class BaseController extends \yii\rest\Controller
         ];
     }
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['corsFilter'] = [
+            'class' => RestCors::className(),
+        ];
+        return $behaviors;
+    }
+
     private $_verbs = ['POST','OPTIONS'];
 
     public function actionOptions ()
