@@ -21,10 +21,6 @@ class AuthController extends BaseController
      */
     public function actionIndex()
     {
-        if (Yii::$app->request->getIsOptions()) {
-            return true;
-        }
-
         $post = json_decode(Yii::$app->getRequest()->getRawBody(), true);
         $user = static::authByUserAndPassword($post['username'], $post['password']);
 

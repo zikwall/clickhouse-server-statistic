@@ -6,9 +6,6 @@ class Configuration
     final public static function current() : array
     {
         return [
-            'uri' => [
-                'baseUrl' => 'http://localhost:8080'
-            ],
             'security' => [
                 'cors' => [
                     'allowed' => [
@@ -19,8 +16,9 @@ class Configuration
                             "Accept-Language", "Last-Event-ID", "Accept-Language",
                             "Cookie", "Content-Length", "WWW-Authenticate", "X-XSRF-TOKEN",
                             "withcredentials", "x-forwarded-for", "x-real-ip",
-                            "x-customheader", "user-agent", "keep-alive", "host",
-                            "connection", "upgrade", "dnt", "if-modified-since", "cache-control"
+                            "user-agent", "keep-alive", "host",
+                            "connection", "upgrade", "dnt", "if-modified-since", "cache-control",
+                            "x-compress"
                         ]
                     ],
                     'maxAge' => 86400

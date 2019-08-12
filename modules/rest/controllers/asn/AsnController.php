@@ -23,10 +23,6 @@ class AsnController extends BaseController
      */
     public function actionExample()
     {
-        if (Yii::$app->request->getIsOptions()) {
-            return true;
-        }
-
         ini_set('memory_limit', '2044M');
         ini_set('max_execution_time', '1000');
 
