@@ -27,6 +27,15 @@ class BaseController extends \yii\rest\Controller
         $this->layout = \false;
     }
 
+    public function actions()
+    {
+        return [
+            'options' => [
+                'class' => 'yii\rest\OptionsAction',
+            ],
+        ];
+    }
+
     private $_verbs = ['POST','OPTIONS'];
 
     public function actionOptions ()
