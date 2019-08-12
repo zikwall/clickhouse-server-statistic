@@ -15,6 +15,11 @@ class AuthController extends BaseController
         return parent::behaviors();
     }
 
+    public function beforeAction($action): bool
+    {
+        return true;
+    }
+
     /**
      * @return array
      * @throws \yii\base\InvalidConfigException
