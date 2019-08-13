@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\rest\controllers\clickhouse;
 
+use Yii;
 use app\modules\rest\models\Monit;
 
 class ClickhouseController extends \app\modules\rest\components\BaseController
