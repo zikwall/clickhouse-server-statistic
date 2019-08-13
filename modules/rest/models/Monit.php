@@ -10,6 +10,21 @@ use Tinderbox\ClickhouseBuilder\Query\Expression;
 
 class Monit extends CHBaseModel
 {
+    public static function total($byPlatform = null)
+    {
+        $query = self::find()->from('stat')
+            ->select([raw('toDate(day_begin) as date'), raw('count(*) as ctn')])
+            ->groupBy('day_begin')
+            ->orderBy('day_begin', 'DESC')
+            ->limit(7);
+
+        if ($byPlatform !== null && in_array($byPlatform, ['ios', 'android', 'smart'])) {
+            $query->where('platform', '=', $byPlatform);
+        }
+
+        return self::execute($query);
+    }
+
     public static function getExample()
     {
         // get count users by channels
@@ -34,6 +49,7 @@ class Monit extends CHBaseModel
             'as' => null,
             'org' => null,
             'country' => null,
+            'city' => null
         ];
 
         $asnResult = [
