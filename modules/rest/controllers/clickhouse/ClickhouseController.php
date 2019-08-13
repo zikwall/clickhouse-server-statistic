@@ -1,4 +1,5 @@
 <?php
+namespace app\modules\rest\controllers\clickhouse;
 
 use app\modules\rest\models\Monit;
 

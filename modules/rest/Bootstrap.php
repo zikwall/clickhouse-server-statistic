@@ -18,7 +18,7 @@ class Bootstrap implements BootstrapInterface
             ['pattern' => 'api/v1/asn/', 'route' => 'rest/asn/asn/example', 'verb' => ['GET', 'OPTIONS']],
 
             //
-            ['pattern' => 'api/v1/clickhouse/total/', 'route' => 'rest/clickhouse/clickhouse/tottal', 'verb' => ['GET', 'OPTIONS']],
+            ['pattern' => 'api/v1/clickhouse/total/', 'route' => 'rest/clickhouse/clickhouse/total', 'verb' => ['GET', 'OPTIONS']],
         ], true);
     }
 }
