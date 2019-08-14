@@ -68,7 +68,7 @@ class Monit extends CHBaseModel
                 $from->query()
                     ->select(raw('DISTINCT ip'))
                     ->from('stat')
-                    ->where('day_begin', '>=',  1565695135)
+                    ->where('day_begin', '>=',  DateHelper::getStartOfDay() - 86400)
                     ->where('ip', '!=', 'NULL');
             })
             ->groupBy(['autonomous_system_organization'])
