@@ -16,6 +16,7 @@ class Bootstrap implements BootstrapInterface
             // Data
             ['pattern' => 'api/v1/data/get/', 'route' => 'rest/data/data/index', 'verb' => ['GET']],
             ['pattern' => 'api/v1/asn/', 'route' => 'rest/asn/asn/example', 'verb' => ['GET', 'OPTIONS']],
+            ['pattern' => 'api/v1/asn2/', 'route' => 'rest/asn/asn/stat', 'verb' => ['GET', 'OPTIONS']],
 
             //
             ['pattern' => 'api/v1/clickhouse/total/', 'route' => 'rest/clickhouse/clickhouse/total', 'verb' => ['GET', 'OPTIONS']],
