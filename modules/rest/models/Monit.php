@@ -62,8 +62,10 @@ class Monit extends CHBaseModel
         $query = self::find()
             ->select([
                 raw('COUNT(ip) as countIP'),
+                //raw("groupUniqArray(dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip))) AS geoname_id)"),
+
                 raw("dictGetString('geoip_asn_blocks_ipv4', 'autonomous_system_organization', tuple(IPv4StringToNum(ip))) AS autonomous_system_organization"),
-                raw("max(dictGetUInt32('geoip_asn_blocks_ipv4', 'autonomous_system_number', tuple(IPv4StringToNum(ip)))) AS autonomous_system_number"),
+                raw("groupUniqArray(dictGetUInt32('geoip_asn_blocks_ipv4', 'autonomous_system_number', tuple(IPv4StringToNum(ip)))) AS autonomous_system_number"),
             ])->from(function (From $from) {
                 $from->query()
                     ->select(raw('DISTINCT ip'))
