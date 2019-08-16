@@ -10,6 +10,6 @@ class Module extends \app\modules\core\components\base\Module
     public $enabledForAllUsers = false;
     public $disabledUsers = [];
     public $jwtKey = 'shwjskwskwsluhrnfrlkfeHWJSKuwmswkUWKwnskiwswswlkmdc';
-    public $jwtExpire = 120;
+    public $jwtExpire = 420;
     public $enableBasicAuth = false;
 }
