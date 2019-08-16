@@ -3,6 +3,7 @@ namespace app\modules\rest\controllers\clickhouse;
 
 use Yii;
 use app\modules\rest\models\Monit;
+use yii\web\ForbiddenHttpException;
 
 class ClickhouseController extends \app\modules\rest\components\BaseController
 {

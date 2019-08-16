@@ -62,10 +62,16 @@ class Monit extends CHBaseModel
         $query = self::find()
             ->select([
                 raw('COUNT(ip) as countIP'),
-                //raw("groupUniqArray(dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip))) AS geoname_id)"),
+                raw("groupArray([
+                    toString(ip), toString(dictGetUInt32('geoip_asn_blocks_ipv4', 'autonomous_system_number', tuple(IPv4StringToNum(ip)))),
+                    toString(dictGetString('geoip_city_locations_en', 'country_name', toUInt64(dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip)))))),
+                    toString(dictGetString('geoip_city_locations_en', 'city_name', toUInt64(dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip))))))
+                ]) as gr"),
+                //raw("dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip))) AS geoname_id"),
+                //raw("dictGetString('geoip_city_locations_en', 'country_name', toUInt64(geoname_id)) AS country_name"),
 
                 raw("dictGetString('geoip_asn_blocks_ipv4', 'autonomous_system_organization', tuple(IPv4StringToNum(ip))) AS autonomous_system_organization"),
-                raw("groupUniqArray(dictGetUInt32('geoip_asn_blocks_ipv4', 'autonomous_system_number', tuple(IPv4StringToNum(ip)))) AS autonomous_system_number"),
+                //raw("dictGetUInt32('geoip_asn_blocks_ipv4', 'autonomous_system_number', tuple(IPv4StringToNum(ip))) AS autonomous_system_number"),
             ])->from(function (From $from) {
                 $from->query()
                     ->select(raw('DISTINCT ip'))
@@ -80,6 +86,7 @@ class Monit extends CHBaseModel
     }
 
     /**
+     * @deprecated
      * @throws \MaxMind\Db\Reader\InvalidDatabaseException
      */
     public static function asn()
