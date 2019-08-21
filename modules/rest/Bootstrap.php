@@ -9,16 +9,17 @@ class Bootstrap implements BootstrapInterface
     public function bootstrap($app)
     {
         $app->urlManager->addRules([
-            // Auth
+            // Auth Block
             ['pattern' => 'api/v1/auth/login/', 'route' => 'rest/auth/auth/index', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/auth/access/', 'route' => 'rest/user/user/access', 'verb' => ['GET', 'OPTIONS']],
 
-            // Data
-            ['pattern' => 'api/v1/data/get/', 'route' => 'rest/data/data/index', 'verb' => ['GET']],
-            ['pattern' => 'api/v1/asn/', 'route' => 'rest/asn/asn/example', 'verb' => ['GET', 'OPTIONS']],
-            ['pattern' => 'api/v1/asn2/', 'route' => 'rest/asn/asn/stat', 'verb' => ['GET', 'OPTIONS']],
+            // Autonomous Systems Block
+            [
+                'pattern' => 'api/v1/autonomous-system/general',
+                'route' => 'rest/autonomoussystems/autonomous-system/general-information',
+                'verb' => ['GET', 'OPTIONS']],
 
-            //
+            // ClickHouse Block
             ['pattern' => 'api/v1/clickhouse/total/', 'route' => 'rest/clickhouse/clickhouse/total', 'verb' => ['GET', 'OPTIONS']],
 
             // For tests Block
