@@ -17,9 +17,8 @@ class Monit extends CHBaseModel
     {
         $query = self::find()->from('stat')
             ->select([raw('toDate(day_begin) as date'), raw('count(*) as ctn')])
-            ->groupBy('day_begin')
-            ->orderBy('day_begin', 'DESC')
-            ->limit(7);
+            ->where('day_begin', '>=', DateHelper::supportInterfaceBy(DateHelper::INTERFACE_WEEK)->getTimestamp())
+            ->groupBy('day_begin');
 
         if ($byPlatform !== null && in_array($byPlatform, ['ios', 'android', 'smart'])) {
             $query->where('platform', '=', $byPlatform);
