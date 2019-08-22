@@ -38,11 +38,11 @@ class Monit extends CHBaseModel
                     toString(dictGetString('geoip_city_locations_en', 'city_name', toUInt64(dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip))))))
                 ]) as gr"),
                 raw("dictGetString('geoip_asn_blocks_ipv4', 'autonomous_system_organization', tuple(IPv4StringToNum(ip))) AS autonomous_system_organization"),
-            ])->from(function (From $from) {
+            ])->from(function (From $from) use ($timestamp)  {
                 $from->query()
                     ->select(raw('DISTINCT ip'))
                     ->from('stat')
-                    ->where('day_begin', '>=',  DateHelper::supportInterfaceBy('day')->getTimestamp())
+                    ->where('day_begin', '>=',  $timestamp)
                     ->where('ip', '!=', 'NULL');
             })
             ->groupBy(['autonomous_system_organization'])
