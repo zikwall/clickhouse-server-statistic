@@ -8,6 +8,6 @@ abstract class AbstractTime
 
     final public function getTimestamp() : int
     {
-        return $this->timestamp - 3600 * 3;
+        return $this->timestamp;
     }
 }
