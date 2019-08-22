@@ -26,7 +26,7 @@ class TestController extends \yii\rest\Controller
     {
         return $this->asJson([
             'query' => Monit::autonomousSystems()->getQuery()->getQuery(),
-            'time' => 1566345600 - 1566334800
+            'time' => mktime(0, 0, 0)
         ]);
     }
 }
