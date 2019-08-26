@@ -1,9 +1,9 @@
 <?php
 namespace app\modules\rest\controllers\test;
 
+use app\modules\core\components\date\range\Range;
 use app\modules\rest\models\Monit;
 use Yii;
-use app\modules\rest\helpers\DateHelper;
 
 class TestController extends \yii\rest\Controller
 {
@@ -18,14 +18,14 @@ class TestController extends \yii\rest\Controller
         }
 
         return $this->asJson([
-           'timestamp' => DateHelper::supportInterfaceBy($getBy)->getTimestamp()
+           'timestamp' => Range::supportInterfaceBy($getBy)->getTimestamp()
         ]);
     }
 
     public function actionTestQueryAs()
     {
         return $this->asJson([
-            'query' => Monit::autonomousSystems()->getQuery()->getQuery(),
+            'query' => Monit::autonomousSystems(Range::supportInterfaceBy('day'))->getQuery()->getQuery(),
             'time' => mktime(0, 0, 0)
         ]);
     }
