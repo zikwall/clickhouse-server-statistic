@@ -26,6 +26,9 @@ class Bootstrap implements BootstrapInterface
             ['pattern' => 'api/v1/for-test/test/timestamp', 'route' => 'rest/test/test/timestamp', 'verb' => ['GET']],
             ['pattern' => 'api/v1/for-test/test/query-as', 'route' => 'rest/test/test/test-query-as', 'verb' => ['GET']],
 
+            //General Data
+            ['pattern' => 'api/v1/general/get-app', 'route' => 'rest/general_data/general-data/get-app', 'verb' => ['GET', 'OPTIONS']],
+
         ], true);
     }
 }
