@@ -2,10 +2,12 @@
 
 namespace app\modules\rest\controllers\autonomoussystems;
 
+use app\modules\core\components\date\range\DateRangeInterface;
 use app\modules\rest\components\BaseController;
-use app\modules\rest\helpers\DateHelper;
+use app\modules\core\components\date\range\Range;
 use app\modules\rest\models\Monit;
 use Yii;
+use yii\helpers\ArrayHelper;
 
 class AutonomousSystemController extends BaseController
 {
@@ -15,25 +17,35 @@ class AutonomousSystemController extends BaseController
             return true;
         }
 
+        $this->allocationOfMemory();
+
         return parent::beforeAction($action);
     }
 
+    protected function performances(): array
+    {
+        return ArrayHelper::merge(parent::performances(), [
+            'general-information' => [
+                'memory' => '4096M',
+                'execution_time' => 1000
+            ]
+        ]);
+    }
+
+    /**
+     * @return bool|\yii\web\Response
+     * @throws \yii\base\InvalidConfigException
+     */
     public function actionGeneralInformation()
     {
-        ini_set('memory_limit', '2044M');
-        ini_set('max_execution_time', '1000');
-
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
 
-        $timeInterface = Yii::$app->request->get('timeBy', 'day');
+        $timeInterface = Yii::$app->request->get('timeBy', DateRangeInterface::INTERFACE_DAY);
 
         return $this->asJson([
-            'data' => Monit::autonomousSystems(
-                DateHelper::supportInterfaceBy($timeInterface)->getTimestamp(),
-                DateHelper::compareTimeInterface($timeInterface, DateHelper::INTERFACE_HOUR)
-            )
+            'data' => Monit::autonomousSystems(Range::supportInterfaceBy($timeInterface))
         ]);
     }
 }
