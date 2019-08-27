@@ -1,9 +1,9 @@
 <?php
 namespace app\modules\rest\controllers\test;
 
+use app\modules\core\components\date\range\Range;
 use app\modules\rest\models\Monit;
 use Yii;
-use app\modules\rest\helpers\DateHelper;
 use app\modules\statistic\models\MonitData;
 use app\modules\statistic\models\MonitAds;
 
@@ -20,7 +20,7 @@ class TestController extends \yii\rest\Controller
         }
 
         return $this->asJson([
-           'timestamp' => DateHelper::supportInterfaceBy($getBy)->getTimestamp()
+           'timestamp' => Range::supportInterfaceBy($getBy)->getTimestamp()
         ]);
     }
 

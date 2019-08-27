@@ -3,21 +3,21 @@
 namespace app\modules\rest\models;
 
 use app\modules\clickhouse\models\CHBaseModel;
-use app\modules\rest\helpers\DataHelper;
-use app\modules\rest\helpers\DateHelper;
-use GeoIp2\Database\Reader;
-use Tinderbox\Clickhouse\Query;
-use Tinderbox\ClickhouseBuilder\Query\Builder;
-use Tinderbox\ClickhouseBuilder\Query\Expression;
+use app\modules\core\components\date\range\Range;
+use app\modules\core\components\date\range\AbstractRange;
+use app\modules\core\components\date\range\DateRangeInterface;
 use Tinderbox\ClickhouseBuilder\Query\From;
 
 class Monit extends CHBaseModel
 {
     public static function total($byPlatform = null)
     {
+        $timeInterface = Range::supportInterfaceBy(DateRangeInterface::INTERFACE_LAST_WEEK);
+
         $query = self::find()->from('stat')
             ->select([raw('toDate(day_begin) as date'), raw('count(*) as ctn')])
-            ->where('day_begin', '>=', DateHelper::supportInterfaceBy(DateHelper::INTERFACE_WEEK)->getTimestamp())
+            ->where('day_begin', '>=', $timeInterface->getTimestamp())
+            ->where('day_begin', '<=', $timeInterface->getEndTimestamp())
             ->groupBy('day_begin');
 
         if ($byPlatform !== null && in_array($byPlatform, ['ios', 'android', 'smart'])) {
@@ -27,7 +27,7 @@ class Monit extends CHBaseModel
         return self::execute($query);
     }
 
-    public static function autonomousSystems(int $timestamp = 0, bool $byHour = false)
+    public static function autonomousSystems(AbstractRange $timeInterface)
     {
         $query = self::find()
             ->select([
@@ -38,11 +38,12 @@ class Monit extends CHBaseModel
                     toString(dictGetString('geoip_city_locations_en', 'city_name', toUInt64(dictGetUInt32('geoip_city_blocks_ipv4', 'geoname_id', tuple(IPv4StringToNum(ip))))))
                 ]) as gr"),
                 raw("dictGetString('geoip_asn_blocks_ipv4', 'autonomous_system_organization', tuple(IPv4StringToNum(ip))) AS autonomous_system_organization"),
-            ])->from(function (From $from) use ($timestamp)  {
+            ])->from(function (From $from) use ($timeInterface)  {
                 $from->query()
                     ->select(raw('DISTINCT ip'))
                     ->from('stat')
-                    ->where('day_begin', '>=',  $timestamp)
+                    ->where('day_begin', '>=',  $timeInterface->getTimestamp())
+                    ->where('day_begin', '<=', $timeInterface->getEndTimestamp())
                     ->where('ip', '!=', 'NULL');
             })
             ->groupBy(['autonomous_system_organization'])

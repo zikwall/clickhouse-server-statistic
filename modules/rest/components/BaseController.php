@@ -19,6 +19,10 @@ class BaseController extends \yii\rest\Controller
      * @var User
      */
     private $user;
+    /**
+     * @var array
+     */
+    protected $memoryAllocationActions = [];
 
     public function init() : void
     {
@@ -43,6 +47,25 @@ class BaseController extends \yii\rest\Controller
             'class' => RestCors::className(),
         ];
         return $behaviors;
+    }
+
+    protected function performances() : array
+    {
+        return [];
+    }
+
+    protected function allocationOfMemory() : void
+    {
+        $this->memoryAllocationActions = $this->performances();
+
+        if (array_key_exists($this->action->id, $this->memoryAllocationActions)) {
+            if (!empty($this->memoryAllocationActions[$this->action->id]['memory'])) {
+                ini_set('memory_limit', $this->memoryAllocationActions[$this->action->id]['memory']);
+            }
+            if (!empty($this->memoryAllocationActions[$this->action->id]['execution_time'])) {
+                ini_set('max_execution_time', $this->memoryAllocationActions[$this->action->id]['execution_time']);
+            }
+        }
     }
 
     private $_verbs = ['POST','OPTIONS'];
@@ -86,6 +109,9 @@ class BaseController extends \yii\rest\Controller
             throw new HttpException('401', 'Invalid user!');
         }
 
+        /**
+         * Disabled session for REST API ideology
+         */
         if (Yii::$app->user->getIsGuest()) {
             // Yii::$app->user->login($user);
         }
@@ -120,6 +146,8 @@ class BaseController extends \yii\rest\Controller
     }
 
     /**
+     * Black list for users
+     *
      * @param User $user
      * @return bool
      */
