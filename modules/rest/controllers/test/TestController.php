@@ -26,10 +26,10 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        $app = "ru.limelime.NetCast";
+        $app = "all";
         $dayBegin = 1565038800;
         $dayEnd = 1566853200;
-        $eventType = 0;
+        $eventType = 'all';
 
         return $this->asJson([
             'adsData' => MonitAds::getData($app, $dayBegin, $dayEnd, $eventType)

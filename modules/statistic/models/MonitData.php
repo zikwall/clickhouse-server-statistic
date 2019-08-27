@@ -16,15 +16,19 @@ class MonitData extends CHBaseModel
         'ru.limelime.webOs',
         'ru.limelime.NetCast',
         'web',
-        'other',
         'all'
-
     ];
 
     const FIRST_RECORD_DATE = 1564002000;
 
-    public static function getApp()
+    public static function getApp($withoutAll = false)
     {
+        if ($withoutAll) {
+            $all = self::APP;
+            unset($all[count($all)-1]);
+            return $all;
+        }
+
         return self::APP;
     }
 
