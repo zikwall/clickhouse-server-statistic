@@ -5,6 +5,7 @@ use app\modules\rest\models\Monit;
 use Yii;
 use app\modules\rest\helpers\DateHelper;
 use app\modules\statistic\models\MonitData;
+use app\modules\statistic\models\MonitAds;
 
 class TestController extends \yii\rest\Controller
 {
@@ -25,13 +26,13 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        /*return $this->asJson([
-            'query' => Monit::autonomousSystems()->getQuery()->getQuery(),
-            'time' => mktime(0, 0, 0)
-        ]);*/
+        $app = "ru.limelime.NetCast";
+        $dayBegin = 1565038800;
+        $dayEnd = 1566853200;
+        $eventType = 0;
 
         return $this->asJson([
-            'app' => MonitData::getApp()
+            'adsData' => MonitAds::getData($app, $dayBegin, $dayEnd, $eventType)
         ]);
     }
 }

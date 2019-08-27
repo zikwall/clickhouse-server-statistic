@@ -28,7 +28,9 @@ class Bootstrap implements BootstrapInterface
 
             //General Data
             ['pattern' => 'api/v1/general/get-app', 'route' => 'rest/general_data/general-data/get-app', 'verb' => ['GET', 'OPTIONS']],
-
+            ['pattern' => 'api/v1/general/get-period', 'route' => 'rest/general_data/general-data/get-period', 'verb' => ['GET', 'OPTIONS']],
+            //Ads Data
+            ['pattern' => 'api/v1/general/get-ads-data', 'route' => 'rest/ads/ads/get-ads-data', 'verb' => ['POST', 'OPTIONS']],
         ], true);
     }
 }

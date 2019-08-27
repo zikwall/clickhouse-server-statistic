@@ -1,11 +1,11 @@
 <?php
-namespace app\modules\rest\controllers\general_data;
+namespace app\modules\rest\controllers\ads;
 
 use app\modules\rest\components\BaseController;
 use app\modules\statistic\models\MonitData;
 use Yii;
 
-class GeneralDataController extends BaseController
+class AdsController extends BaseController
 {
     public function beforeAction($action): bool
     {
@@ -16,25 +16,20 @@ class GeneralDataController extends BaseController
         return parent::beforeAction($action);
     }
 
-    public function actionGetApp()
+    public function actionGetAdsData()
     {
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
 
-        return $this->asJson([
-            'app' => MonitData::getApp()
-        ]);
-    }
-
-    public function actionGetPeriod()
-    {
-        if (Yii::$app->request->getIsOptions()) {
-            return true;
-        }
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $eventType = $request->post('eventType');
 
         return $this->asJson([
-            'period' => MonitData::getPeriod()
+            'adsData' => [$app, $dayBegin, $dayEnd, $eventType]
         ]);
     }
 }

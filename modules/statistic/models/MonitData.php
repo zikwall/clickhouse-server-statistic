@@ -21,8 +21,15 @@ class MonitData extends CHBaseModel
 
     ];
 
+    const FIRST_RECORD_DATE = 1564002000;
+
     public static function getApp()
     {
         return self::APP;
+    }
+
+    public static function getPeriod()
+    {
+        return [self::FIRST_RECORD_DATE, mktime(0, 0, 0)];
     }
 }
