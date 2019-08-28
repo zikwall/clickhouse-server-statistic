@@ -26,13 +26,24 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        $app = "all";
+        $app = "com.infolink.LimeHDTV";
         $dayBegin = 1565038800;
         $dayEnd = 1566853200;
-        $eventType = 'all';
+        //$eventType = 'all';
+        $data = MonitAds::getData($app, $dayBegin, $dayEnd/*, $eventType*/)->rows;
+        $arrAdsId = MonitData::getAdsId();
 
-        return $this->asJson([
-            'adsData' => MonitAds::getData($app, $dayBegin, $dayEnd, $eventType)
-        ]);
+
+        foreach($data as $k => $v) {
+            if (!in_array($v['adsid'], $arrAdsId)) {
+                unset($data[$k]);
+            }
+        }
+
+        return $data;
+
+        //return $this->asJson([
+        //    'adsData' => MonitAds::getData($app, $dayBegin, $dayEnd/*, $eventType*/)
+        //]);
     }
 }

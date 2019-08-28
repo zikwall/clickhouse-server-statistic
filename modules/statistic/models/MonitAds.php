@@ -19,26 +19,26 @@ class MonitAds extends CHBaseModel
      * @return \Tinderbox\Clickhouse\Query\Result
      * @throws \yii\base\InvalidConfigException
      */
-    public static function getData($app, $dayBegin, $dayEnd, $eventType)
+    public static function getData($app, $dayBegin, $dayEnd/*, $eventType*/)
     {
-        $time = Range::supportInterfaceBy(DateRangeInterface::INTERFACE_WEEK);
+        //$time = Range::supportInterfaceBy(DateRangeInterface::INTERFACE_WEEK);
         $isAllApp = false;
-        $isAllEventType = false;
+        //$isAllEventType = false;
 
         if ($app === 'all') {
             $isAllApp = true;
         }
 
-        if ($eventType === 'all') {
+        /*if ($eventType === 'all') {
             $isAllEventType = true;
-        }
+        }*/
 
         $query = Monit::find()
             ->select([
                 'adsid',
                 raw('groupArray([toString(adsst), toString(countAdsst)]) as groupData')
             ])
-            ->from(function (From $from) use ($isAllApp, $isAllEventType, $dayBegin, $dayEnd, $app, $eventType) {
+            ->from(function (From $from) use ($isAllApp, /*$isAllEventType,*/ $dayBegin, $dayEnd, $app/*, $eventType*/) {
                 $from->query()->select([
                     'adsid',
                     'adsst',
@@ -82,7 +82,7 @@ class MonitAds extends CHBaseModel
                     ->groupBy('adsid', 'adsst');
             })->groupBy('adsid');
 
-        return $query->toSql();
-        //return self::execute($query);
+        //return $query->toSql();
+        return self::execute($query);
     }
 }

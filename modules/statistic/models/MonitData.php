@@ -21,6 +21,15 @@ class MonitData extends CHBaseModel
 
     const FIRST_RECORD_DATE = 1564002000;
 
+    const ADS_ID = [
+        'regionmedia',
+        'yandex',
+        'Ruform',
+        'getintent',
+        'videonow',
+        '1xbet'
+    ];
+
     public static function getApp($withoutAll = false)
     {
         if ($withoutAll) {
@@ -35,5 +44,10 @@ class MonitData extends CHBaseModel
     public static function getPeriod()
     {
         return [self::FIRST_RECORD_DATE, mktime(0, 0, 0)];
+    }
+
+    public static function getAdsId()
+    {
+        return self::ADS_ID;
     }
 }
