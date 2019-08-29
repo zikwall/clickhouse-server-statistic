@@ -39,7 +39,7 @@ class AdsController extends BaseController
 
 
         return $this->asJson([
-            'adsData' => $data
+            'adsData' => array_values($data)
         ]);
     }
 }
