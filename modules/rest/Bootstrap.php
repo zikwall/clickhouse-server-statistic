@@ -33,6 +33,7 @@ class Bootstrap implements BootstrapInterface
             ['pattern' => 'api/v1/general/get-ads-data', 'route' => 'rest/ads/ads/get-ads-data', 'verb' => ['POST', 'OPTIONS']],
             //App Users
             ['pattern' => 'api/v1/general/get-app-users', 'route' => 'rest/app_users/app-users/get-app-users', 'verb' => ['POST', 'OPTIONS']],
+            ['pattern' => 'api/v1/general/get-app-users-total', 'route' => 'rest/app_users/app-users/get-app-users-total', 'verb' => ['POST', 'OPTIONS']],
         ], true);
     }
 }

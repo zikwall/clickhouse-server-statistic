@@ -4,8 +4,9 @@ namespace app\modules\rest\controllers\app_users;
 use app\modules\rest\components\BaseController;
 use app\modules\statistic\models\MonitAppUsers;
 use Yii;
+use yii\rest\Controller;
 
-class AppUsersController extends BaseController
+class AppUsersController extends Controller
 {
     public function beforeAction($action): bool
     {
@@ -16,20 +17,37 @@ class AppUsersController extends BaseController
         return parent::beforeAction($action);
     }
 
-    public function actionGetAdsData()
+    public function actionGetAppUsers()
     {
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
 
-        $app = 'com.infolink.limeiptv';
+        $app = 'all';
         $dayBegin = 1566680400;
         $dayEnd = 1567026000;
-        $eventType = 0;
-        $data = MonitAppUsers::getAppUsers($app, $dayBegin, $dayEnd, $eventType);
+        $eventType = 'all';
+        $data = MonitAppUsers::getAppUsersGroupByDay($app, $dayBegin, $dayEnd, $eventType);
 
         return $this->asJson([
             'appUsers' => $data
+        ]);
+    }
+
+    public function actionGetAppUsersTotal()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $app = 'all';
+        $dayBegin = 1566680400;
+        $dayEnd = 1567026000;
+        $eventType = 'all';
+        $data = MonitAppUsers::getAppUsersGroupByTotal($app, $dayBegin, $dayEnd, $eventType);
+
+        return $this->asJson([
+            'appUsersTotal' => $data
         ]);
     }
 }
