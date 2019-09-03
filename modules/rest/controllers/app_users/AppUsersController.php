@@ -23,10 +23,12 @@ class AppUsersController extends Controller
             return true;
         }
 
-        $app = 'all';
-        $dayBegin = 1566680400;
-        $dayEnd = 1567026000;
-        $eventType = 'all';
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $eventType = $request->post('eventType');
+
         $data = MonitAppUsers::getAppUsersGroupByDay($app, $dayBegin, $dayEnd, $eventType);
 
         return $this->asJson([
@@ -40,10 +42,12 @@ class AppUsersController extends Controller
             return true;
         }
 
-        $app = 'all';
-        $dayBegin = 1566680400;
-        $dayEnd = 1567026000;
-        $eventType = 'all';
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $eventType = $request->post('eventType');
+
         $data = MonitAppUsers::getAppUsersGroupByTotal($app, $dayBegin, $dayEnd, $eventType);
 
         return $this->asJson([
