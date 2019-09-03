@@ -13,7 +13,8 @@ class MonitAppUsers extends CHBaseModel
             ->from('stat')
             ->where('day_begin', '>=', $dayBegin)
             ->where('day_begin', '<=', $dayEnd)
-            ->groupBy('day_begin');
+            ->groupBy('day_begin')
+            ->orderBy('day_begin' );
 
         if (DataHelper::isAll($app)) {
             $query->whereIn('app', MonitData::getApp(true));
