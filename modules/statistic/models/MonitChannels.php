@@ -13,7 +13,7 @@ class MonitChannels extends CHBaseModel
         $query = self::find()
             ->select([
                 'vcid',
-                raw('groupArray([evtp, ctnarch, ctnonline]) as groupData')
+                raw('groupArray([toString(evtp), toString(ctnarch), toString(ctnonline)]) as groupData')
             ])
             ->from(function (From $from) use ($app, $dayBegin, $dayEnd) {
                 $from = $from->query();
