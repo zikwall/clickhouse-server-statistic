@@ -4,9 +4,8 @@ namespace app\modules\rest\controllers\app_users;
 use app\modules\rest\components\BaseController;
 use app\modules\statistic\models\MonitAppUsers;
 use Yii;
-use yii\rest\Controller;
 
-class AppUsersController extends Controller
+class AppUsersController extends BaseController
 {
     public function beforeAction($action): bool
     {
