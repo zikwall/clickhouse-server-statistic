@@ -50,4 +50,9 @@ class MonitData extends CHBaseModel
     {
         return self::ADS_ID;
     }
+
+    public static function isNIkkitaVesdePobrita($app)
+    {
+        return $app === self::APP[1];
+    }
 }
