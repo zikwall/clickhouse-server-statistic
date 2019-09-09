@@ -67,7 +67,23 @@ class MonitChannels extends CHBaseModel
 
     public static function getChannelsUniqUsers($app, $dayBegin, $dayEnd)
     {
+        $query = self::find()->select([
+            'vcid',
+            raw('COUNT(DISTINCT device_id) as ctn'),
+        ])
+            ->from('stat')
+            ->where(function (Builder $query) use ($app) {
+                if (DataHelper::isAll($app)) {
+                    $query->whereIn('app', MonitData::getApp(true));
+                } else {
+                    $query->where('app', '=', $app);
+                }
+            })
+            ->where('day_begin', '>=', $dayBegin)
+            ->where('day_begin', '<=', $dayEnd)
+            ->groupBy('vcid');
 
+        return self::execute($query);
     }
 
     public static function getStartApp($app, $dayBegin, $dayEnd)
