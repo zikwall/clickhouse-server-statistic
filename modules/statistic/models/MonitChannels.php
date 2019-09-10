@@ -85,13 +85,15 @@ class MonitChannels extends CHBaseModel
                 } elseif (DataHelper::isAll($app)) {
                     // тут вся гремуча смесь вместе
                     $query
-                        ->where('launch', '!=', 'NULL')
+                        ->where('window', '=', 'channels')
                         ->orWhere('action', '=', 'start-app');
                 } else {
                     // остальные платформы не отправляют action, но у них есть поле launch
-                    $query->where('launch', '!=', 'NULL');
+                    $query
+                        ->where('window', '=', 'channels')
+                        ->where('app', '=', $app);
                 }
-            })->groupBy(['day_begin']);
+            })->groupBy(['day_begin'])->orderBy('day_begin');
 
         return self::execute($query);
     }

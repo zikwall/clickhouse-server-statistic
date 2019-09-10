@@ -29,6 +29,10 @@ class ChannelsController extends BaseController
         $data = MonitChannels::getChannelsViewDuration($app, $dayBegin, $dayEnd);
         $nameChannels = (array) json_decode(file_get_contents('https://limehd.tv/api/v1/channels?access_token=r0ynhfybabufythekbn'));
 
+        /**
+         * Приведение данных к нормальному виду и подстановка названий каналов + отсев мусора
+         */
+
         foreach($data->rows as $key => $value) {
             if (!isset($nameChannels[$value['vcid']])){
                 continue;
@@ -61,9 +65,10 @@ class ChannelsController extends BaseController
             return true;
         }
 
-        $app = "com.infolink.LimeHDTV";
-        $dayBegin = 1567285200;
-        $dayEnd = 1567544400;
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
         $data = MonitChannels::getStartChannels($app, $dayBegin, $dayEnd);
 
         return $this->asJson([
@@ -93,9 +98,10 @@ class ChannelsController extends BaseController
             return true;
         }
 
-        $app = "com.infolink.LimeHDTV";
-        $dayBegin = 1567285200;
-        $dayEnd = 1567544400;
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
         $data = MonitChannels::getStartApp($app, $dayBegin, $dayEnd);
 
         return $this->asJson([
