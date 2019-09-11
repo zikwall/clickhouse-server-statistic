@@ -84,9 +84,10 @@ class ChannelsController extends BaseController
             return true;
         }
 
-        $app = "com.infolink.LimeHDTV";
-        $dayBegin = 1567285200;
-        $dayEnd = 1567544400;
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
         $data = MonitChannels::getChannelsUniqUsers($app, $dayBegin, $dayEnd);
 
         return $this->asJson([
