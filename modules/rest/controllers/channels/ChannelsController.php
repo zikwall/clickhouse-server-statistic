@@ -45,11 +45,13 @@ class ChannelsController extends BaseController
 
             foreach($value['groupData'] as $key1 => $value1) {
                 if ($value1[0] == 0) {
-                    $channelsViewDuration[$nameChannels[$value['vcid']]]['online'] = sprintf('%02d:%02d:%02d', ($value1[1]*30)/3600, (($value1[1]*30)%3600)/60, (($value1[1]*30)%3600)%60);
+                    //$channelsViewDuration[$nameChannels[$value['vcid']]]['online'] = sprintf('%02d:%02d:%02d', ($value1[1]*30)/3600, (($value1[1]*30)%3600)/60, (($value1[1]*30)%3600)%60);
+                    $channelsViewDuration[$nameChannels[$value['vcid']]]['online'] = $value1[1];
                 }
 
                 if ($value1[0] == 1) {
-                    $channelsViewDuration[$nameChannels[$value['vcid']]]['archive'] = sprintf('%02d:%02d:%02d', ($value1[2]*30)/3600, (($value1[2]*30)%3600)/60, (($value1[2]*30)%3600)%60);
+                    //$channelsViewDuration[$nameChannels[$value['vcid']]]['archive'] = sprintf('%02d:%02d:%02d', ($value1[2]*30)/3600, (($value1[2]*30)%3600)/60, (($value1[2]*30)%3600)%60);
+                    $channelsViewDuration[$nameChannels[$value['vcid']]]['archive'] = $value1[2];
                 }
             }
         }
