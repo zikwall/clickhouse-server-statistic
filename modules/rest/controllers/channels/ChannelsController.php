@@ -111,4 +111,20 @@ class ChannelsController extends BaseController
             'startApp' => $data
         ]);
     }
+
+    public function actionGetChefParameter()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $app = 'com.infolink.LimeHDTV';
+        $dayBegin = 1567976400;
+        $dayEnd = 1568149200;
+        $data = MonitChannels::getChefParameter($app, $dayBegin, $dayEnd);
+
+        return $this->asJson([
+            'chefParameter' => $data
+        ]);
+    }
 }

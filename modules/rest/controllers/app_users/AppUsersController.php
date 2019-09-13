@@ -3,6 +3,7 @@ namespace app\modules\rest\controllers\app_users;
 
 use app\modules\rest\components\BaseController;
 use app\modules\statistic\models\MonitAppUsers;
+use app\modules\statistic\models\MonitChannels;
 use Yii;
 
 class AppUsersController extends BaseController
@@ -51,6 +52,22 @@ class AppUsersController extends BaseController
 
         return $this->asJson([
             'appUsersTotal' => $data
+        ]);
+    }
+
+    public function actionGetTimeZoneUsers()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $app = 'com.infolink.LimeHDTV';
+        $dayBegin = 1567976400;
+        $dayEnd = 1568149200;
+        $data = MonitAppUsers::getTimeZoneUsers($app, $dayBegin, $dayEnd);
+
+        return $this->asJson([
+            'timeZoneUsers' => $data
         ]);
     }
 }

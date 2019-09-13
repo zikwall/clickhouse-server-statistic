@@ -102,6 +102,7 @@ class MonitChannels extends CHBaseModel
                     // тут вся гремуча смесь вместе
                     $query
                         ->where('window', '=', 'loading')
+                        ->whereIn('app', MonitData::getApp(true))
                         ->orWhere('action', '=', 'start-app');
                 } else {
                     // остальные платформы не отправляют action, но у них есть поле launch
@@ -112,5 +113,10 @@ class MonitChannels extends CHBaseModel
             })->groupBy(['day_begin'])->orderBy('day_begin');
 
         return self::execute($query);
+    }
+
+    public static function getChefParameter($app, $dayBegin, $dayEnd)
+    {
+        return $app .' '. $dayBegin .' '. $dayEnd;
     }
 }

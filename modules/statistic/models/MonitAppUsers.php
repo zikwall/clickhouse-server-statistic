@@ -52,4 +52,9 @@ class MonitAppUsers extends CHBaseModel
 
         return self::execute($query);
     }
+
+    public static function getTimeZoneUsers($app, $dayBegin, $dayEnd)
+    {
+        return $app .' '. $dayBegin .' '. $dayEnd;
+    }
 }

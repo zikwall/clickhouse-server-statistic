@@ -34,11 +34,13 @@ class Bootstrap implements BootstrapInterface
             //App Users
             ['pattern' => 'api/v1/general/get-app-users', 'route' => 'rest/app_users/app-users/get-app-users', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/general/get-app-users-total', 'route' => 'rest/app_users/app-users/get-app-users-total', 'verb' => ['POST', 'OPTIONS']],
+            ['pattern' => 'api/v1/general/get-time-zone-users', 'route' => 'rest/app_users/app-users/get-time-zone-users', 'verb' => ['POST', 'OPTIONS']],
             //Channels Stat
             ['pattern' => 'api/v1/general/get-channels-view-duration', 'route' => 'rest/channels/channels/get-channels-view-duration', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/general/get-start-channels', 'route' => 'rest/channels/channels/get-start-channels', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/general/get-channels-uniq-users', 'route' => 'rest/channels/channels/get-channels-uniq-users', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/general/get-start-app', 'route' => 'rest/channels/channels/get-start-app', 'verb' => ['POST', 'OPTIONS']],
+            ['pattern' => 'api/v1/general/get-chef-parameter', 'route' => 'rest/channels/channels/get-chef-parameter', 'verb' => ['POST', 'OPTIONS']],
         ], true);
     }
 }
