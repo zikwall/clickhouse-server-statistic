@@ -117,6 +117,20 @@ class MonitChannels extends CHBaseModel
 
     public static function getChefParameter($app, $dayBegin, $dayEnd)
     {
-        return $app .' '. $dayBegin .' '. $dayEnd;
+        $query = self::find()->select([
+            'day_begin', raw('COUNT(DISTINCT device_id) as ctn')
+        ])->from('stat')
+            ->where('day_begin', '>=', $dayBegin)
+            ->where('day_begin', '<=', $dayEnd)
+            ->groupBy('day_begin')
+            ->havingRaw('ctn > 0');
+
+        if (DataHelper::isAll($app)) {
+            $query->whereIn('app', MonitData::getApp(true));
+        } else {
+            $query->where('app', '=', $app);
+        }
+
+        return $query->toSql();
     }
 }
