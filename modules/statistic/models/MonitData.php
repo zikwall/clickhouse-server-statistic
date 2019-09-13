@@ -11,6 +11,7 @@ class MonitData extends CHBaseModel
         'com.infolink.limeiptv',
         'com.infolink.LimeHDTV',
         'limehd.ru.lite',
+        'liteios',
         'limehd.ru.ctv',
         'ctvios',
         'ru.limelime.Tizen',
