@@ -97,7 +97,9 @@ class MonitChannels extends CHBaseModel
                  */
                 if (MonitData::isNIkkitaVesdePobrita($app)) {
                     // iOS берется по полю action
-                    $query->where('action', '=', 'start-app');
+                    $query
+                        ->where('action', '=', 'start-app')
+                        ->where('app', '=', $app);
                 } elseif (DataHelper::isAll($app)) {
                     // тут вся гремуча смесь вместе
                     $query

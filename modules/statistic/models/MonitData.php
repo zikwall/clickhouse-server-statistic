@@ -55,6 +55,6 @@ class MonitData extends CHBaseModel
 
     public static function isNIkkitaVesdePobrita($app)
     {
-        return $app === self::APP[1];
+        return $app === self::APP[1] || $app === self::APP[3] || $app === self::APP[5];
     }
 }
