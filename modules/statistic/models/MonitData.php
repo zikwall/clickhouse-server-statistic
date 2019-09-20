@@ -57,4 +57,9 @@ class MonitData extends CHBaseModel
     {
         return $app === self::APP[1] || $app === self::APP[3] || $app === self::APP[5];
     }
+
+    public static function isSmartTv($app)
+    {
+        return $app === self::APP[6] || $app === self::APP[7] || $app === self::APP[8];
+    }
 }
