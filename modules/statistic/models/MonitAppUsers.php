@@ -3,14 +3,21 @@ namespace app\modules\statistic\models;
 
 use app\modules\clickhouse\models\CHBaseModel;
 use app\modules\rest\helpers\DataHelper;
+use app\modules\statistic\models\MonitData;
 
 class MonitAppUsers extends CHBaseModel
 {
     public static function getAppUsersGroupByDay($app, $dayBegin, $dayEnd, $eventType)
     {
-        $query = self::find()
-            ->select(['day_begin', raw('COUNT(DISTINCT device_id) as ctn')])
-            ->from('stat')
+        $query = self::find();
+
+            if (MonitData::isSmartTv($app)) {
+                $query->select(['day_begin', raw('COUNT(DISTINCT guid) as ctn')]);
+            } else {
+                $query->select(['day_begin', raw('COUNT(DISTINCT device_id) as ctn')]);
+            }
+
+            $query->from('stat')
             ->where('day_begin', '>=', $dayBegin)
             ->where('day_begin', '<=', $dayEnd)
             ->groupBy('day_begin')
@@ -58,7 +65,7 @@ class MonitAppUsers extends CHBaseModel
         return ['0', '2', '3', '4', '6', '7', '8'];
     }
 
-    public static function getTimeZoneUsers($app, $dayBegin, $dayEnd)
+    public static function getTimeZoneUsers($app, $dayBegin, $dayEnd, $eventType)
     {
         $query = self::find()->select([
             'tz', raw('COUNT(DISTINCT device_id) as ctn')
@@ -72,6 +79,12 @@ class MonitAppUsers extends CHBaseModel
             $query->whereIn('app', MonitData::getApp(true));
         } else {
             $query->where('app', '=', $app);
+        }
+
+        if (DataHelper::isAll($eventType)) {
+            $query->whereIn('evtp', [0, 1]);
+        } else {
+            $query->where('evtp', '=', $eventType);
         }
 
         return self::execute($query);

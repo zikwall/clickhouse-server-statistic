@@ -61,10 +61,13 @@ class AppUsersController extends BaseController
             return true;
         }
 
-        $app = 'com.infolink.LimeHDTV';
-        $dayBegin = 1567976400;
-        $dayEnd = 1568149200;
-        $data = MonitAppUsers::getTimeZoneUsers($app, $dayBegin, $dayEnd);
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $eventType = $request->post('eventType');
+
+        $data = MonitAppUsers::getTimeZoneUsers($app, $dayBegin, $dayEnd, $eventType);
 
         return $this->asJson([
             'timeZoneUsers' => $data
