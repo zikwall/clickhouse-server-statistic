@@ -37,6 +37,7 @@ class MonitChannels extends CHBaseModel
                     ->where('day_begin', '>=', $dayBegin)
                     ->where('day_begin', '<=', $dayEnd)
                     ->where('adsst', '=', 'NULL')
+                    ->where('action', '!=', 'opening-channel')
                     ->where('evtp', '!=', 666666)
                     ->groupBy(['vcid', 'evtp']);
             })

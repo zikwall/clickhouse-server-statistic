@@ -45,12 +45,10 @@ class ChannelsController extends BaseController
 
             foreach($value['groupData'] as $key1 => $value1) {
                 if ($value1[0] == 0) {
-                    //$channelsViewDuration[$nameChannels[$value['vcid']]]['online'] = sprintf('%02d:%02d:%02d', ($value1[1]*30)/3600, (($value1[1]*30)%3600)/60, (($value1[1]*30)%3600)%60);
                     $channelsViewDuration[$nameChannels[$value['vcid']]]['online'] = $value1[1];
                 }
 
                 if ($value1[0] == 1) {
-                    //$channelsViewDuration[$nameChannels[$value['vcid']]]['archive'] = sprintf('%02d:%02d:%02d', ($value1[2]*30)/3600, (($value1[2]*30)%3600)/60, (($value1[2]*30)%3600)%60);
                     $channelsViewDuration[$nameChannels[$value['vcid']]]['archive'] = $value1[2];
                 }
             }
@@ -72,9 +70,21 @@ class ChannelsController extends BaseController
         $dayBegin = $request->post('dayBegin');
         $dayEnd = $request->post('dayEnd');
         $data = MonitChannels::getStartChannels($app, $dayBegin, $dayEnd);
+        $nameChannels = (array) json_decode(file_get_contents('https://limehd.tv/api/v1/channels?access_token=r0ynhfybabufythekbn'));
+        $startChannels = [];
+
+        foreach($data->rows as $key => $value) {
+            if (!isset($nameChannels[$value['vcid']])){
+                continue;
+            }
+
+            $startChannels[$nameChannels[$value['vcid']]]['vcid'] = $value['vcid'];
+            $startChannels[$nameChannels[$value['vcid']]]['name'] = $nameChannels[$value['vcid']];
+            $startChannels[$nameChannels[$value['vcid']]]['ctn'] = $value['ctn'];
+        }
 
         return $this->asJson([
-            'startChannels' => $data
+            'startChannels' => $startChannels
         ]);
     }
 
