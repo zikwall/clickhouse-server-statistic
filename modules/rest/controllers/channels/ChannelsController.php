@@ -9,6 +9,7 @@ class ChannelsController extends BaseController
 {
     public function beforeAction($action): bool
     {
+        set_time_limit(600);
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
@@ -27,7 +28,7 @@ class ChannelsController extends BaseController
         $dayBegin = $request->post('dayBegin');
         $dayEnd = $request->post('dayEnd');
         $data = MonitChannels::getChannelsViewDuration($app, $dayBegin, $dayEnd);
-        $nameChannels = (array) json_decode(file_get_contents('https://limehd.tv/api/v1/channels?access_token=r0ynhfybabufythekbn'));
+        $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
 
         /**
          * Приведение данных к нормальному виду и подстановка названий каналов + отсев мусора
@@ -70,7 +71,7 @@ class ChannelsController extends BaseController
         $dayBegin = $request->post('dayBegin');
         $dayEnd = $request->post('dayEnd');
         $data = MonitChannels::getStartChannels($app, $dayBegin, $dayEnd);
-        $nameChannels = (array) json_decode(file_get_contents('https://limehd.tv/api/v1/channels?access_token=r0ynhfybabufythekbn'));
+        $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
         $startChannels = [];
 
         foreach($data->rows as $key => $value) {

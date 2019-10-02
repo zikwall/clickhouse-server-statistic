@@ -10,6 +10,7 @@ class AppUsersController extends BaseController
 {
     public function beforeAction($action): bool
     {
+        set_time_limit(600);
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
