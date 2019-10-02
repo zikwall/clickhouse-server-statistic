@@ -29,7 +29,8 @@ class MonitData extends CHBaseModel
         'Ruform',
         'getintent',
         'videonow',
-        '1xbet'
+        '1xbet',
+        'MyTarget'
     ];
 
     public static function getApp($withoutAll = false)
