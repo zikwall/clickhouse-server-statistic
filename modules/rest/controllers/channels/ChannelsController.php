@@ -138,4 +138,42 @@ class ChannelsController extends BaseController
             'chefParameter' => $data
         ]);
     }
+
+    public function actionGetChannelsUniqUsersWithEvtp()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $request = Yii::$app->request;
+        $app = $request->post('app');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
+        $data = MonitChannels::getContUsersWithEvtp($app, $dayBegin, $dayEnd);
+        $channelsUniqUsersWithEvtp = [];
+
+        //Приводим данные в нормальный вид + отсеиваем левые данные
+
+        foreach ($data as $key => $item) {
+            if (!isset($nameChannels[$item['vcid']])) {
+                continue;
+            }
+
+            if (!isset($channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][0])) {
+                $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][0] = 0;
+            }
+
+            if (!isset($channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][1])) {
+                $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][1] = 0;
+            }
+
+            $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][$data[$key]['evtp']] = $item['ctn'];
+            $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]]['vcid'] = $item['vcid'];
+        }
+
+        return $this->asJson([
+            'channelsUniqUsersWithEvtp' => $channelsUniqUsersWithEvtp
+        ]);
+    }
 }

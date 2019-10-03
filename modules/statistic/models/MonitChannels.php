@@ -82,6 +82,8 @@ class MonitChannels extends CHBaseModel
             })
             ->where('day_begin', '>=', $dayBegin)
             ->where('day_begin', '<=', $dayEnd)
+            ->where('adsst', '=', 'NULL')
+            ->where('evtp', '!=', 666666)
             ->groupBy('vcid');
 
         return self::execute($query);
@@ -135,5 +137,31 @@ class MonitChannels extends CHBaseModel
         }
 
         return $query->toSql();
+    }
+
+    public static function getContUsersWithEvtp($app, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+            ->select([
+                'vcid',
+                'evtp',
+                raw('COUNT(DISTINCT device_id) as ctn')
+            ])
+            ->from('stat')
+            ->where(function (Builder $query) use ($app) {
+                if (DataHelper::isAll($app)) {
+                    $query->whereIn('app', self::getApp(true));
+                } else {
+                    $query->where('app', '=', $app);
+                }
+            })
+
+            ->where('day_begin', '>=', $dayBegin)
+            ->where('day_begin', '<=', $dayEnd)
+            ->where('adsst', '=', 'NULL')
+            ->where('evtp', '!=', 666666)
+            ->groupBy(['vcid', 'evtp']);
+
+        return self::execute($query);
     }
 }
