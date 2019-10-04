@@ -176,4 +176,20 @@ class ChannelsController extends BaseController
             'channelsUniqUsersWithEvtp' => $channelsUniqUsersWithEvtp
         ]);
     }
+
+    public function actionGetStartAllApp()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $request = Yii::$app->request;
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $data = MonitChannels::getStartAllApp($dayBegin, $dayEnd);
+
+        return $this->asJson([
+            'startAllApp' => $data
+        ]);
+    }
 }

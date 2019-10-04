@@ -164,4 +164,16 @@ class MonitChannels extends CHBaseModel
 
         return self::execute($query);
     }
+
+    public static function getStartAllApp($dayBegin, $dayEnd)
+    {
+        $query = self::find()->select(['app', raw('COUNT(*) as ctn')])->from('stat')
+            ->where('day_begin', '>=', $dayBegin)
+            ->where('day_begin', '<=', $dayEnd)
+            ->where('action', '=', 'start-app')
+            ->whereIn('app', MonitData::getApp(true))
+            ->groupBy(['app']);
+
+        return self::execute($query);
+    }
 }

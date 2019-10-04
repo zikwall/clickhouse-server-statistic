@@ -35,53 +35,19 @@ class TestController extends \yii\rest\Controller
             return true;
         }
 
-        $app = "com.infolink.LimeHDTV";
         $dayBegin = 1567285200;
         $dayEnd = 1567544400;
-        $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
-        $channelsUniqUsersWithEvtp = [];
 
-        $query = MonitChannels::find()
-            ->select([
-                'vcid',
-                'evtp',
-                raw('COUNT(DISTINCT device_id) as ctn')
-            ])
-            ->from('stat')
-            ->where(function (Builder $query) use ($app) {
-                if (DataHelper::isAll($app)) {
-                    $query->whereIn('app', MonitData::getApp(true));
-                } else {
-                    $query->where('app', '=', $app);
-                }
-            })
-
+        $query = MonitChannels::find()->select(['app', raw('COUNT(*) as ctn')])->from('stat')
             ->where('day_begin', '>=', $dayBegin)
             ->where('day_begin', '<=', $dayEnd)
-            ->where('adsst', '=', 'NULL')
-            ->where('evtp', '!=', 666666)
-            ->groupBy(['vcid', 'evtp']);
+            ->where('action', '=', 'start-app')
+            //->where('window', '=', 'loading')
+            ->whereIn('app', MonitData::getApp(true))
+            ->where('action', '=', 'start-app')
+            ->groupBy(['app']);
 
-        $data = MonitChannels::execute($query);
-
-        //Приводим данные в нормальный вид + отсеиваем левые данные
-
-        foreach ($data as $key => $item) {
-            if (!isset($nameChannels[$item['vcid']])) {
-                continue;
-            }
-
-            if (!isset($channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][0])) {
-                $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][0] = 0;
-            }
-
-            if (!isset($channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][1])) {
-                $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][1] = 0;
-            }
-
-            $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]][$data[$key]['evtp']] = $item['ctn'];
-            $channelsUniqUsersWithEvtp[$nameChannels[$item['vcid']]]['vcid'] = $item['vcid'];
-        }
+        return MonitChannels::execute($query);
 
         echo '<pre>';
         print_r($channelsUniqUsersWithEvtp);
