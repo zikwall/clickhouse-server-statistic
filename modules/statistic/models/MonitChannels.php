@@ -150,7 +150,7 @@ class MonitChannels extends CHBaseModel
             ->from('stat')
             ->where(function (Builder $query) use ($app) {
                 if (DataHelper::isAll($app)) {
-                    $query->whereIn('app', self::getApp(true));
+                    $query->whereIn('app', MonitData::getApp(true));
                 } else {
                     $query->where('app', '=', $app);
                 }
