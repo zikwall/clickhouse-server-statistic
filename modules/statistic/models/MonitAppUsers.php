@@ -62,7 +62,7 @@ class MonitAppUsers extends CHBaseModel
 
     public static function getAllTimezones()
     {
-        return ['0', '2', '3', '4', '6', '7', '8'];
+        return ['0', '2', '3', '4', '5', '6', '7', '8'];
     }
 
     public static function getTimeZoneUsers($app, $dayBegin, $dayEnd, $eventType)
