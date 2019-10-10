@@ -74,4 +74,21 @@ class AppUsersController extends BaseController
             'timeZoneUsers' => $data
         ]);
     }
+
+    public function actionGetMonthUsers()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $request = Yii::$app->request;
+        $year = 2019;
+        $month = 10;
+
+        $data = MonitAppUsers::getMonthUsers($year, $month);
+
+        return $this->asJson([
+            'timeZoneUsers' => $data
+        ]);
+    }
 }

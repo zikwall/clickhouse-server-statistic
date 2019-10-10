@@ -95,6 +95,11 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/channels/channels/get-channels-uniq-users-with-evtp',
                 'verb'      => ['POST', 'OPTIONS']
             ],
+            [
+                'pattern'   => 'api/v1/general/get-month-users',
+                'route'     => 'rest/channels/channels/get-month-users',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
             /*
             [
                 'pattern'   => 'api/v1/general/get-chef-parameter',

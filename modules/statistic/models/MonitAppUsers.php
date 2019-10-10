@@ -93,4 +93,9 @@ class MonitAppUsers extends CHBaseModel
 
         return self::execute($query);
     }
+
+    public static function getMonthUsers($year, $month)
+    {
+
+    }
 }
