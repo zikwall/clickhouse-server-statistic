@@ -120,8 +120,7 @@ class MonitAppUsers extends CHBaseModel
                     ->from('stat')
                     ->where('month_begin', '>=', $previousMonthBegin)
                     ->where('month_begin', '<', $nextMonthBegin)
-                    ->groupBy('month_begin', 'device_id')
-                    ->limit(10);
+                    ->groupBy('month_begin', 'device_id');
             })
             ->groupBy('month_begin');
 
