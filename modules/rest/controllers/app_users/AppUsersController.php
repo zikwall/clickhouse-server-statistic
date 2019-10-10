@@ -84,8 +84,9 @@ class AppUsersController extends BaseController
         $request = Yii::$app->request;
         $year = 2019;
         $month = 10;
+        $app = 'com.infolink.limeiptv';
 
-        $data = MonitAppUsers::getMonthUsers($year, $month);
+        $data = MonitAppUsers::getMonthUsers($app, $year, $month);
 
         return $this->asJson([
             'timeZoneUsers' => $data

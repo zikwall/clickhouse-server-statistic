@@ -14,7 +14,7 @@ use app\modules\statistic\models\MonitAds;
 
 class TestController extends \yii\rest\Controller
 {
-    public function actionTimestamp()
+    public function actionTimestamp(int $year, int $month)
     {
         $getBy = Yii::$app->request->get('by', null);
 
@@ -35,26 +35,15 @@ class TestController extends \yii\rest\Controller
             return true;
         }
 
-        $dayBegin = 1567285200;
-        $dayEnd = 1567544400;
+        $request = Yii::$app->request;
+        $year = 2019;
+        $month = 10;
+        $app = 'com.infolink.limeiptv';
 
-        $query = MonitChannels::find()->select(['app', raw('COUNT(*) as ctn')])->from('stat')
-            ->where('day_begin', '>=', $dayBegin)
-            ->where('day_begin', '<=', $dayEnd)
-            ->where('action', '=', 'start-app')
-            //->where('window', '=', 'loading')
-            ->whereIn('app', MonitData::getApp(true))
-            ->where('action', '=', 'start-app')
-            ->groupBy(['app']);
+        $data = MonitAppUsers::getMonthUsers($app, $year, $month);
 
-        return MonitChannels::execute($query);
-
-        echo '<pre>';
-        print_r($channelsUniqUsersWithEvtp);
-        //print_r(MonitChannels::execute($query));
-
-        //return MonitChannels::execute($query);
-
-        //return MonitAppUsers::getTimeZoneUsers($app, $dayBegin, $dayEnd);
+        return $this->asJson([
+            'timeZoneUsers' => $data
+        ]);
     }
 }

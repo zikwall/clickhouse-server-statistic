@@ -97,7 +97,7 @@ class Bootstrap implements BootstrapInterface
             ],
             [
                 'pattern'   => 'api/v1/general/get-month-users',
-                'route'     => 'rest/channels/channels/get-month-users',
+                'route'     => 'rest/app_users/app-users/get-month-users',
                 'verb'      => ['POST', 'OPTIONS']
             ],
             /*

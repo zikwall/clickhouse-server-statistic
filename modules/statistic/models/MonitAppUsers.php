@@ -2,8 +2,11 @@
 namespace app\modules\statistic\models;
 
 use app\modules\clickhouse\models\CHBaseModel;
+use app\modules\core\components\date\range\Month;
 use app\modules\rest\helpers\DataHelper;
 use app\modules\statistic\models\MonitData;
+use function foo\func;
+use Tinderbox\ClickhouseBuilder\Query\From;
 
 class MonitAppUsers extends CHBaseModel
 {
@@ -94,8 +97,34 @@ class MonitAppUsers extends CHBaseModel
         return self::execute($query);
     }
 
-    public static function getMonthUsers($year, $month)
+    public static function getMonthUsers(string $app, int $year, string $month)
     {
+        $month = Month::NameToNumber($month);
 
+        $d = new \DateTime(sprintf('%d-%s-01', $year, $month));
+        $currentMonthBegin = $d->getTimestamp();
+
+        $d->modify('first day of previous month');
+        $previousMonthBegin = $d->getTimestamp();
+
+        $d->modify('first day of next month');
+        $nextMonthBegin = $d->getTimestamp();
+
+        $query = self::find()->select([
+            'month_begin',
+            raw('groupArray(device_id) as groupDevice')
+        ])
+            ->from(function (From $from) use ($previousMonthBegin, $nextMonthBegin) {
+                $from->query()
+                    ->select('month_begin', 'device_id')
+                    ->from('stat')
+                    ->where('month_begin', '>=', $previousMonthBegin)
+                    ->where('month_begin', '<', $nextMonthBegin)
+                    ->groupBy('month_begin', 'device_id')
+                    ->limit(10);
+            })
+            ->groupBy('month_begin');
+
+        return self::execute($query);
     }
 }
