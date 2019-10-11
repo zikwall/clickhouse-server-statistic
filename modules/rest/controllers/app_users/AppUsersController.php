@@ -80,16 +80,35 @@ class AppUsersController extends BaseController
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
-
+        ini_set('memory_limit', '6144M');
+        ini_set('max_execution_time', '600');
         $request = Yii::$app->request;
-        $year = 2019;
-        $month = 10;
-        $app = 'com.infolink.limeiptv';
+        $app = $request->post('app');
+        $year = $request->post('year');
+        $month = $request->post('month');
 
         $data = MonitAppUsers::getMonthUsers($app, $year, $month);
 
         return $this->asJson([
-            'timeZoneUsers' => $data
+            'monthUsers' => $data
+        ]);
+    }
+
+    public function actionGetUserIntersectionAndroid()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        ini_set('memory_limit', '6144M');
+        ini_set('max_execution_time', '600');
+
+        $dayBegin = 1567296000;
+        $dayEnd = 1569888000;
+
+        $data = MonitAppUsers::getUserIntersectionAndroid($dayBegin, $dayEnd);
+
+        return $this->asJson([
+            'monthUsers' => $data
         ]);
     }
 }

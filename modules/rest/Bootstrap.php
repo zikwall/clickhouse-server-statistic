@@ -100,6 +100,11 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/app_users/app-users/get-month-users',
                 'verb'      => ['POST', 'OPTIONS']
             ],
+            [
+                'pattern'   => 'api/v1/general/get-user-intersection',
+                'route'     => 'rest/app_users/app-users/get-user-intersection-android',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
             /*
             [
                 'pattern'   => 'api/v1/general/get-chef-parameter',

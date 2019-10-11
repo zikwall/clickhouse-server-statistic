@@ -107,23 +107,36 @@ class MonitAppUsers extends CHBaseModel
         $d->modify('first day of previous month');
         $previousMonthBegin = $d->getTimestamp();
 
-        $d->modify('first day of next month');
+        $d->modify('first day of next month')->modify('first day of next month');
         $nextMonthBegin = $d->getTimestamp();
 
         $query = self::find()->select([
             'month_begin',
             raw('groupArray(device_id) as groupDevice')
         ])
-            ->from(function (From $from) use ($previousMonthBegin, $nextMonthBegin) {
-                $from->query()
+            ->from(function (From $from) use ($previousMonthBegin, $nextMonthBegin, $app) {
+                $subQuery = $from->query()
                     ->select('month_begin', 'device_id')
                     ->from('stat')
-                    ->where('month_begin', '>=', $previousMonthBegin)
-                    ->where('month_begin', '<', $nextMonthBegin)
-                    ->groupBy('month_begin', 'device_id');
+                    ->where('month_begin', '=>', $previousMonthBegin)
+                    ->orWhere('month_begin', '<', $nextMonthBegin);
+                    //->where('app', '=', $app);
+
+                    if (DataHelper::isAll($app)) {
+                        $subQuery->whereIn('app', MonitData::getApp(true));
+                    } else {
+                        $subQuery->where('app', '=', $app);
+                    }
+
+                $subQuery->groupBy('month_begin', 'device_id');
             })
             ->groupBy('month_begin');
 
         return self::execute($query);
+    }
+
+    public static function getUserIntersectionAndroid($dayBegin, $dayEnd)
+    {
+
     }
 }

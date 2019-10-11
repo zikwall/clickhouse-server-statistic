@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\rest\controllers\test;
 
+use app\modules\core\components\date\range\Month;
 use app\modules\core\components\date\range\Range;
 use app\modules\rest\helpers\DataHelper;
 use app\modules\rest\models\Monit;
@@ -34,16 +35,43 @@ class TestController extends \yii\rest\Controller
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
-
-        $request = Yii::$app->request;
-        $year = 2019;
         $month = 10;
+        $year = 2019;
         $app = 'com.infolink.limeiptv';
 
-        $data = MonitAppUsers::getMonthUsers($app, $year, $month);
+        $d = new \DateTime(sprintf('%d-%s-01', $year, $month));
+        $currentMonthBegin = $d->getTimestamp();
 
-        return $this->asJson([
-            'timeZoneUsers' => $data
-        ]);
+        $d->modify('first day of previous month');
+        $previousMonthBegin = $d->getTimestamp();
+
+        $d->modify('first day of next month')->modify('first day of next month');
+        $nextMonthBegin = $d->getTimestamp();
+        echo 'currentMonthBegin ' . $currentMonthBegin . '<br>';
+        echo 'previousMonthBegin ' . $previousMonthBegin . '<br>';
+        echo 'nextMonthBegin ' . $nextMonthBegin . '<br>';die;
+        $query = MonitAppUsers::find()->select([
+            'month_begin',
+            raw('groupArray(device_id) as groupDevice')
+        ])
+            ->from(function (From $from) use ($previousMonthBegin, $nextMonthBegin, $app) {
+                $subQuery = $from->query()
+                    ->select('month_begin', 'device_id')
+                    ->from('stat')
+                    ->where('month_begin', '>=', $previousMonthBegin)
+                    ->where('month_begin', '<', $nextMonthBegin)
+                    ->where('app', '=', $app);
+
+                if (DataHelper::isAll($app)) {
+                    $subQuery->whereIn('app', MonitData::getApp(true));
+                } else {
+                    $subQuery->where('app', '=', $app);
+                }
+
+                $subQuery->groupBy('month_begin', 'device_id');
+            })
+            ->groupBy('month_begin');
+
+        return MonitAppUsers::execute($query);
     }
 }
