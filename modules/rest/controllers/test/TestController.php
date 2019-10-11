@@ -32,46 +32,13 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        if (Yii::$app->request->getIsOptions()) {
-            return true;
-        }
-        $month = 10;
-        $year = 2019;
-        $app = 'com.infolink.limeiptv';
+        ini_set('memory_limit', '6144M');
+        ini_set('max_execution_time', '600');
 
-        $d = new \DateTime(sprintf('%d-%s-01', $year, $month));
-        $currentMonthBegin = $d->getTimestamp();
+        $dayBegin = 1567296000;
+        $dayEnd = 1569888000;
+        $platform = 'android';
 
-        $d->modify('first day of previous month');
-        $previousMonthBegin = $d->getTimestamp();
-
-        $d->modify('first day of next month')->modify('first day of next month');
-        $nextMonthBegin = $d->getTimestamp();
-        echo 'currentMonthBegin ' . $currentMonthBegin . '<br>';
-        echo 'previousMonthBegin ' . $previousMonthBegin . '<br>';
-        echo 'nextMonthBegin ' . $nextMonthBegin . '<br>';die;
-        $query = MonitAppUsers::find()->select([
-            'month_begin',
-            raw('groupArray(device_id) as groupDevice')
-        ])
-            ->from(function (From $from) use ($previousMonthBegin, $nextMonthBegin, $app) {
-                $subQuery = $from->query()
-                    ->select('month_begin', 'device_id')
-                    ->from('stat')
-                    ->where('month_begin', '>=', $previousMonthBegin)
-                    ->where('month_begin', '<', $nextMonthBegin)
-                    ->where('app', '=', $app);
-
-                if (DataHelper::isAll($app)) {
-                    $subQuery->whereIn('app', MonitData::getApp(true));
-                } else {
-                    $subQuery->where('app', '=', $app);
-                }
-
-                $subQuery->groupBy('month_begin', 'device_id');
-            })
-            ->groupBy('month_begin');
-
-        return MonitAppUsers::execute($query);
+        $data = MonitAppUsers::getUserIntersectionAndroid($dayBegin, $dayEnd, $platform);
     }
 }

@@ -6,6 +6,7 @@ use app\modules\core\components\date\range\Month;
 use app\modules\rest\helpers\DataHelper;
 use app\modules\statistic\models\MonitData;
 use function foo\func;
+use Tinderbox\Clickhouse\Query;
 use Tinderbox\ClickhouseBuilder\Query\From;
 
 class MonitAppUsers extends CHBaseModel
@@ -135,8 +136,30 @@ class MonitAppUsers extends CHBaseModel
         return self::execute($query);
     }
 
-    public static function getUserIntersectionAndroid($dayBegin, $dayEnd)
-    {
+    private static $groups = [
+        'android' => [
+            'com.infolink.limeiptv',
+            'limehd.ru.lite',
+            'limehd.ru.ctv',
+        ],
+        'ios' => [
 
+        ]
+    ];
+
+    public static function getUserIntersectionAndroid(int $dayBegin, int $dayEnd, string $platform)
+    {
+        $query = self::find()->select([
+            'app', raw('groupArray(device_id) as groupDevice')
+        ])->from(function (From $from) use ($dayBegin, $dayEnd, $platform) {
+            $from->query()
+                ->select('app', 'device_id')->from('stat')
+                ->where('day_begin', '>=', $dayBegin)
+                ->where('day_begin', '<=', $dayEnd)
+                ->whereIn('app', self::$groups[$platform])
+            ->groupBy(['app', 'device_id']);
+        })->groupBy('app');
+
+        return self::execute($query);
     }
 }

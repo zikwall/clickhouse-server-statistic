@@ -104,8 +104,9 @@ class AppUsersController extends BaseController
 
         $dayBegin = 1567296000;
         $dayEnd = 1569888000;
+        $platform = 'android';
 
-        $data = MonitAppUsers::getUserIntersectionAndroid($dayBegin, $dayEnd);
+        $data = MonitAppUsers::getUserIntersectionAndroid($dayBegin, $dayEnd, $platform);
 
         return $this->asJson([
             'monthUsers' => $data
