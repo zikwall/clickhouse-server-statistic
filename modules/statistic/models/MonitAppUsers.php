@@ -143,7 +143,9 @@ class MonitAppUsers extends CHBaseModel
             'limehd.ru.ctv',
         ],
         'ios' => [
-
+            'com.infolink.LimeHDTV',
+            'liteios',
+            'ctvios',
         ]
     ];
 

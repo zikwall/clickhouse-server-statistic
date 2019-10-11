@@ -37,7 +37,7 @@ class TestController extends \yii\rest\Controller
 
         $dayBegin = 1567296000;
         $dayEnd = 1569888000;
-        $platform = 'android';
+        $platform = 'ios';
 
         $data = MonitAppUsers::getUserIntersectionAndroid($dayBegin, $dayEnd, $platform);
     }
