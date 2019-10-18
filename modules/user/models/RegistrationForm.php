@@ -95,17 +95,17 @@ class RegistrationForm extends Model
     /**
      * @inheritdoc
      */
-    public function formName()
+    /*public function formName()
     {
         return 'register-form';
-    }
+    }*/
 
     /**
      * @return bool
      * @throws \yii\base\InvalidConfigException
      */
     public function register()
-    {
+    { 
         if (!$this->validate()) {
             return false;
         }

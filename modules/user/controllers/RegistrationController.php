@@ -10,7 +10,7 @@ use app\modules\user\traits\AjaxValidationTrait;
 use app\modules\user\traits\EventTrait;
 use Yii;
 use yii\filters\AccessControl;
-use yii\web\Controller;
+use yii\rest\Controller;
 use yii\web\NotFoundHttpException;
 
 class RegistrationController extends Controller
@@ -81,7 +81,7 @@ class RegistrationController extends Controller
     }
 
     /** @inheritdoc */
-    public function behaviors()
+  /*  public function behaviors()
     {
         return [
             'access' => [
@@ -92,7 +92,7 @@ class RegistrationController extends Controller
                 ],
             ],
         ];
-    }
+    }*/
 
     /**
      * @return string
@@ -113,19 +113,17 @@ class RegistrationController extends Controller
 
         //$this->performAjaxValidation($model);
 
-        if ($model->load(Yii::$app->request->post()) && $model->register()) {
+        if ($model->load(Yii::$app->request->post(), '') && $model->register()) {
 
             $this->trigger(self::EVENT_AFTER_REGISTER, $event);
 
-            return $this->render('/message', [
-                'title'  => Yii::t('user', 'Your account has been created'),
-                'module' => $this->module,
+            return $this->asJson([
+                'status' => true,
             ]);
         }
 
-        return $this->render('register', [
-            'model'  => $model,
-            'module' => $this->module,
+        return $this->asJson([
+            'status' => false,
         ]);
     }
 
@@ -177,25 +175,20 @@ class RegistrationController extends Controller
      * @throws \yii\base\InvalidConfigException
      * @throws \yii\db\StaleObjectException
      */
-    public function actionConfirm($id, $code)
+    public function actionConfirm($id)
     {
         $user = $this->finder->findUserById($id);
-
+        
         if ($user === null || $this->module->enableConfirmation == false) {
             throw new NotFoundHttpException();
         }
-
-        $event = $this->getUserEvent($user);
-
-        $this->trigger(self::EVENT_BEFORE_CONFIRM, $event);
-
-        $user->attemptConfirmation($code);
-
-        $this->trigger(self::EVENT_AFTER_CONFIRM, $event);
-
-        return $this->render('/message', [
-            'title'  => Yii::t('user', 'Account confirmation'),
-            'module' => $this->module,
+        
+        $user->confirmed_at = time();
+        $user->save();
+        
+        return $this->asJson([
+            'id' => $id,
+            'message' => "User activated succesfull",
         ]);
     }
 

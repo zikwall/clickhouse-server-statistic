@@ -372,9 +372,9 @@ class User extends ActiveRecord implements IdentityInterface
             $token->link('user', $this);
         }
 
-        if(!InviteCode::invite($this)) {
+        /*if(!InviteCode::invite($this)) {
             throw new InvalidCallException('Invite not link to user!');
-        }
+        }*/
 
         $this->mailer->sendWelcomeMessage($this, isset($token) ? $token : null);
         $this->trigger(self::AFTER_REGISTER);
@@ -445,7 +445,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return $this->username;
     }
-
+    
     /** @inheritdoc */
     public function beforeSave($insert)
     {
