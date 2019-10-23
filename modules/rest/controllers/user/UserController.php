@@ -4,6 +4,7 @@ namespace app\modules\rest\controllers\user;
 use Yii;
 use app\modules\rest\components\BaseController;
 use app\modules\user\models\UserChannels;
+use app\modules\user\models\User;
 
 class UserController extends BaseController
 {
@@ -99,4 +100,61 @@ class UserController extends BaseController
             'return'    => true,
         ]);
     }
+    
+    public function actionGetUsers()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $accounts = User::find()->select([
+            'id',
+            'username',
+            'email',
+            'confirmed_at',
+            'blocked_at',
+            'registration_ip',
+            'created_at',
+            'updated_at'
+            ])->asArray()->all();
+        
+        return $this->asJson($accounts);
+    }
+    
+    public function actionConfirm($id) {
+        //$user = $this->finder->findUserById($id);
+        $user = User::findOne($id);
+
+        if ($user === null /*|| $userModule->enableConfirmation == false*/) {
+            throw new NotFoundHttpException();
+        }
+
+        $user->confirmed_at = time();
+        $user->save();
+
+        return $this->asJson([
+                    'id' => $id,
+                    'confirmed_at' => $user->confirmed_at,
+                    'message' => "User activated succesfull",
+        ]);
+    }
+
+    public function actionUnconfirm($id) {
+        //$user = $this->finder->findUserById($id);
+        $user = User::findOne($id);
+        
+        if ($user === null /*|| $this->module->enableConfirmation == false*/) {
+            throw new NotFoundHttpException();
+        }
+
+        $user->confirmed_at = null;
+        $user->save();
+
+        return $this->asJson([
+                    'id' => $id,
+                    'confirmed_at' => $user->confirmed_at,
+                    'message' => "User disconnect succesfull",
+        ]);
+    }
+
 }

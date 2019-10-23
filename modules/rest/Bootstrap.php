@@ -13,7 +13,8 @@ class Bootstrap implements BootstrapInterface
             ['pattern' => 'api/v1/auth/login/', 'route' => 'rest/auth/auth/index', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/auth/access/', 'route' => 'rest/user/user/access', 'verb' => ['GET', 'OPTIONS']],
             ['pattern' => 'api/v1/auth/register/', 'route' => 'user/registration/register222', 'verb' => ['POST', 'OPTIONS']],
-            ['pattern' => 'api/v1/auth/register/confirm', 'route' => 'user/registration/confirm', 'verb' => ['GET', 'OPTIONS']],
+            ['pattern' => 'api/v1/auth/register/confirm', 'route' => 'rest/user/user/confirm', 'verb' => ['GET', 'OPTIONS']],
+            ['pattern' => 'api/v1/auth/register/unconfirm', 'route' => 'rest/user/user/unconfirm', 'verb' => ['GET', 'OPTIONS']],
             // Autonomous Systems Block
             [
                 'pattern' => 'api/v1/autonomous-system/general',
@@ -46,6 +47,7 @@ class Bootstrap implements BootstrapInterface
             //User block
             ['pattern' => 'api/v1/user/channels/link', 'route' => 'rest/user/user/link-channels', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/user/channels/unlink', 'route' => 'rest/user/user/unlink-channels', 'verb' => ['POST', 'OPTIONS']],
+            ['pattern' => 'api/v1/user/list', 'route' => 'rest/user/user/get-users', 'verb' => ['GET', 'OPTIONS']],
         ], true);
     }
 }

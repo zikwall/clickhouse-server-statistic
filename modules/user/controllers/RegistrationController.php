@@ -188,7 +188,26 @@ class RegistrationController extends Controller
         
         return $this->asJson([
             'id' => $id,
+            'confirmed_at' => $user->confirmed_at,
             'message' => "User activated succesfull",
+        ]);
+    }
+    
+    public function actionUnconfirm($id)
+    {
+        $user = $this->finder->findUserById($id);
+
+        if ($user === null || $this->module->enableConfirmation == false) {
+            throw new NotFoundHttpException();
+        }
+
+        $user->confirmed_at = null;
+        $user->save();
+
+        return $this->asJson([
+            'id' => $id,
+            'confirmed_at' => $user->confirmed_at,
+            'message' => "User disconnect succesfull",
         ]);
     }
 
