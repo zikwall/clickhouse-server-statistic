@@ -5,6 +5,7 @@ use Yii;
 use app\modules\rest\components\BaseController;
 use app\modules\user\models\UserChannels;
 use app\modules\user\models\User;
+use app\modules\user\models\UserPermissions;
 
 class UserController extends BaseController
 {
@@ -131,11 +132,23 @@ class UserController extends BaseController
 
         $user->confirmed_at = time();
         $user->save();
+               
+        $permissionId = 5;
+        
+        $permissionLink = Yii::createObject([
+            'class' => UserPermissions::class,
+            'user_id' => $id,
+            'permission_id' => $permissionId
+        ]);
+
+        if (!$permissionLink->create()) {
+            throw new BadRequestHttpException();
+        }
 
         return $this->asJson([
-                    'id' => $id,
-                    'confirmed_at' => $user->confirmed_at,
-                    'message' => "User activated succesfull",
+            'id' => $id,
+            'confirmed_at' => $user->confirmed_at,
+            'message' => "User activated succesfull",
         ]);
     }
 
@@ -149,7 +162,13 @@ class UserController extends BaseController
 
         $user->confirmed_at = null;
         $user->save();
-
+        
+        $userPermissions = new UserPermissions();
+        
+        if ($userPermissions->terminate($id) == false) {
+            throw new NotFoundHttpException();
+        }
+        
         return $this->asJson([
                     'id' => $id,
                     'confirmed_at' => $user->confirmed_at,

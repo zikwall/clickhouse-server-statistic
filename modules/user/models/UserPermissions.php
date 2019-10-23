@@ -72,4 +72,25 @@ class UserPermissions extends \yii\db\ActiveRecord
 
         return true;
     }
+    
+    /**
+     * 
+     * @param type $userId
+     * @return bool|inter
+     * @throws Exception
+     */
+    public function terminate($userId) : ?bool
+    {
+        $userPermission = static::find()->where(['user_id' =>  $userId])->one();
+
+        if (is_null($userPermission)) {
+            throw new Exception('User not exist');
+        }
+
+        if (!$userPermission->delete()) {
+            return false;
+        }
+
+        return $userPermission->permission_id;
+    }
 }

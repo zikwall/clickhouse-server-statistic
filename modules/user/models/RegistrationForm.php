@@ -51,7 +51,7 @@ class RegistrationForm extends Model
         $user = $this->module->modelMap['User'];
 
         return [
-            [['code'], 'required'],
+            //[['code'], 'required'],
             // username rules
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernameTrim'     => ['username', 'filter', 'filter' => 'trim'],
