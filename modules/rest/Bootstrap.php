@@ -48,6 +48,7 @@ class Bootstrap implements BootstrapInterface
             ['pattern' => 'api/v1/user/channels/link', 'route' => 'rest/user/user/link-channels', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/user/channels/unlink', 'route' => 'rest/user/user/unlink-channels', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/user/list', 'route' => 'rest/user/user/get-users', 'verb' => ['GET', 'OPTIONS']],
+            ['pattern' => 'api/v1/user/channels/list', 'route' => 'rest/user/user/get-user-channels', 'verb' => ['GET', 'OPTIONS']],
         ], true);
     }
 }

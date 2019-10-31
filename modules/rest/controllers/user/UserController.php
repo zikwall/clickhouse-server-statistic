@@ -60,7 +60,7 @@ class UserController extends BaseController
         } catch (\Exception $ex) {
             return $this->asJson([
                 'message'   => 'Record existence',
-                'return'    => false,
+                'result'    => false,
             ]);
         }
         
@@ -174,6 +174,27 @@ class UserController extends BaseController
                     'confirmed_at' => $user->confirmed_at,
                     'message' => "User disconnect succesfull",
         ]);
+    }
+    
+    public function actionGetUserChannels()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $userChannels = UserChannels::findAll(['user_id' => $this->user->id]);
+        $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
+        
+        $list = array_map(function($channel) use ($nameChannels) {
+            $obj = new \stdClass();
+            $obj->id = $channel->id;
+            $obj->name = $nameChannels[$channel->channel_id];
+            $obj->checked = false;
+            
+            return $obj;
+        }, $userChannels);
+
+        return $this->asJson($list);
     }
 
 }

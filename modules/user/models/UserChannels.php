@@ -16,13 +16,7 @@ use app\modules\core\components\base\ActiveRecord;
  * @author user
  */
 class UserChannels extends ActiveRecord
-{
-    public $id;
-    
-    public $user_id;
-    
-    public $channel_id;
-    
+{   
     public static function tableName() {
         return '{{%user_channels}}';
     }
