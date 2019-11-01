@@ -102,6 +102,61 @@ class UserController extends BaseController
         ]);
     }
     
+    public function actionUserChannelsUpdate()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $channels = Yii::$app->request->post('channels');
+        
+        if (sizeof($channels) == 0) {
+            return $this->asJson([
+                'message' => 'Not found',
+                'result' => false,
+            ]);
+        }
+        
+        $userChannels = UserChannels::find()->select(['channel_id'])
+                ->where(['user_id' => $this->user->id])
+                ->asArray()
+                ->all();
+        $userChannels = \yii\helpers\ArrayHelper::getColumn($userChannels, 'channel_id');
+
+        $deleteList = [];
+        $insertList = [];
+        
+        foreach ($channels as $channel) {
+            if (in_array($channel, $userChannels)) {
+               $deleteList[] = $channel;
+               continue;
+            }
+            
+            $insertList[] = [
+                $this->user->id,
+                $channel
+            ];
+        }
+        
+        if (sizeof($deleteList) > 0) {
+            UserChannels::deleteAll([
+                'AND',
+                'user_id' => $this->user->id,
+                ['in', 'channel_id', $deleteList]
+                    ]);
+        }
+        
+        if (sizeof($insertList) > 0) {
+            Yii::$app->db->createCommand()
+                    ->batchInsert(UserChannels::tableName(),['user_id', 'channel_id'],$insertList)
+                    ->execute();
+        }
+        
+        return $this->asJson([
+            'result' => true
+        ]);
+    }
+    
     public function actionGetUsers()
     {
         if (Yii::$app->request->getIsOptions()) {
@@ -184,10 +239,10 @@ class UserController extends BaseController
 
         $userChannels = UserChannels::findAll(['user_id' => $this->user->id]);
         $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
-        
+
         $list = array_map(function($channel) use ($nameChannels) {
             $obj = new \stdClass();
-            $obj->id = $channel->id;
+            $obj->id = $channel->channel_id;
             $obj->name = $nameChannels[$channel->channel_id];
             $obj->checked = false;
             
