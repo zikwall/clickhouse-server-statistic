@@ -102,16 +102,15 @@ class UserController extends BaseController
             'registration_ip',
             'created_at',
             'updated_at'
-            ])->asArray()->all();
+            ])->where(['not in', 'id', $this->user->id])->asArray()->all();
         
         return $this->asJson($accounts);
     }
     
     public function actionConfirm($id) {
-        //$user = $this->finder->findUserById($id);
         $user = User::findOne($id);
 
-        if ($user === null /*|| $userModule->enableConfirmation == false*/) {
+        if ($user === null) {
             throw new NotFoundHttpException();
         }
 
@@ -138,10 +137,9 @@ class UserController extends BaseController
     }
 
     public function actionUnconfirm($id) {
-        //$user = $this->finder->findUserById($id);
         $user = User::findOne($id);
         
-        if ($user === null /*|| $this->module->enableConfirmation == false*/) {
+        if ($user === null) {
             throw new NotFoundHttpException();
         }
 
