@@ -34,8 +34,6 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        $result = MonitLoadChannels::getLoad()->getRows();
-
-        return $this->asJson($result);
+        return $this->asJson(MonitLoadChannels::getLoad()->getRows());
     }
 }
