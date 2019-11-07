@@ -18,7 +18,7 @@ class MonitLoadChannels extends CHBaseModel
             ->where('month_begin', '>=', strtotime(date('Y-m-01')))
             ->where('day_begin', '>=', $dayBegin)
             ->where('day_begin', '<=', $dayEnd)
-            ->orderBy('sumHour', 'DESC')
+            ->orderBy('hour_begin', 'DESC')
             ->groupBy(['url_protocol', 'hour_begin']);
 
         return self::execute($query);
