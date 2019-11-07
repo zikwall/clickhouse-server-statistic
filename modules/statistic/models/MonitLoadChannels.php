@@ -6,6 +6,22 @@ use app\modules\clickhouse\models\CHBaseModel;
 
 class MonitLoadChannels extends CHBaseModel
 {
+    public static function getLoad()
+    {
+        $dayBegin = mktime(0, 0, 0);
+        $dayEnd = mktime(23, 59, 59);
+
+        $query = self::find()
+            ->select([raw('sum(count) as sumHour'), 'url_protocol', 'hour_begin'])
+            ->from('channel_loads')
+            ->where('month_begin', '>=', strtotime(date('Y-m-01')))
+            ->where('day_begin', '>=', $dayBegin)
+            ->where('day_begin', '<=', $dayEnd)
+            ->groupBy(['url_protocol', 'hour_begin']);
+
+        return self::execute($query);
+    }
+
     public static function saveLoadChannels()
     {
         $data = [];
