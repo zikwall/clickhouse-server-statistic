@@ -34,6 +34,10 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        return $this->asJson(MonitLoadChannels::getLoad());
+        $result = MonitLoadChannels::getLoad()->getRows();
+        usort($result, function($a, $b) {
+            return $a['sumHour'] <= $b['sumHour'];
+        });
+        return $this->asJson($result);
     }
 }
