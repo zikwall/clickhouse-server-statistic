@@ -33,6 +33,16 @@ class MonitData extends CHBaseModel
         'MyTarget'
     ];
 
+    const BROADCASTERS = [
+        'http://172.19.95.111:4020/api/chnls',
+        'http://172.19.95.110:4020/api/chnls',
+        'http://172.19.95.109:4020/api/chnls',
+        'http://172.19.95.108:4020/api/chnls',
+        'http://172.19.95.112:4020/api/chnls',
+        'http://172.19.95.114:4020/api/chnls',
+        'http://api.limehd.tv/cdn'
+    ];
+
     public static function getApp($withoutAll = false)
     {
         if ($withoutAll) {

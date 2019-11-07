@@ -32,13 +32,38 @@ class TestController extends \yii\rest\Controller
 
     public function actionTestQueryAs()
     {
-        ini_set('memory_limit', '6144M');
-        ini_set('max_execution_time', '600');
+        $data = [];
+        $online = [];
 
-        $dayBegin = 1567296000;
-        $dayEnd = 1569888000;
-        $platform = 'ios';
+        foreach (MonitData::BROADCASTERS as $broadcastUrl) {
+            $answer = @file_get_contents($broadcastUrl);
 
-        $data = MonitAppUsers::getUserIntersectionAndroid($dayBegin, $dayEnd, $platform);
+            if (!$answer) {
+                continue;
+            }
+
+            $data[] = json_decode(file_get_contents($broadcastUrl), true)['CHANNELS'];
+        }
+
+        foreach ($data as $broadcast) {
+            foreach ($broadcast as $channel => $count) {
+                if (isset($online[$channel])) {
+                    $online[$channel] += $count;
+                } else {
+                    $online[$channel] = $count;
+                }
+            }
+        }
+
+        date_default_timezone_set('Europe/Moscow');
+        $monthBegin = strtotime(date('Y-m-01'));
+        $dayBegin = mktime(0, 0, 0);
+        $hourBegin = strtotime(date('Y-m-d H:0:0'));
+
+        echo date('Y-m-d H:i:s', $hourBegin) . '<br>';
+
+        //echo '<pre>';
+        //print_r($online);
+        echo 'OK';die;
     }
 }
