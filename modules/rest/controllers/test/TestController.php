@@ -1,6 +1,7 @@
 <?php
 namespace app\modules\rest\controllers\test;
 
+use app\modules\clickhouse\models\CHBaseModel;
 use app\modules\core\components\date\range\Month;
 use app\modules\core\components\date\range\Range;
 use app\modules\rest\helpers\DataHelper;
@@ -48,11 +49,15 @@ class TestController extends \yii\rest\Controller
         foreach ($data as $broadcast) {
             foreach ($broadcast as $channel => $count) {
                 if (isset($online[$channel])) {
-                    $online[$channel] += $count;
+                    $online[$channel] += (int) $count;
                 } else {
-                    $online[$channel] = $count;
+                    $online[$channel] = (int) $count;
                 }
             }
+        }
+
+        if (empty($online)) {
+            return;
         }
 
         date_default_timezone_set('Europe/Moscow');
@@ -60,10 +65,22 @@ class TestController extends \yii\rest\Controller
         $dayBegin = mktime(0, 0, 0);
         $hourBegin = strtotime(date('Y-m-d H:0:0'));
 
-        echo date('Y-m-d H:i:s', $hourBegin) . '<br>';
+        $insertedRows = [];
 
-        //echo '<pre>';
-        //print_r($online);
-        echo 'OK';die;
+        foreach ($online as $url => $count) {
+            $insertedRows[] = [
+                'month_begin'  => $monthBegin,
+                'day_begin'    => $dayBegin,
+                'hour_begin'   => $hourBegin,
+                'url_protocol' => $url,
+                'count'        => (int) $count
+            ];
+        };
+
+        if (empty($insertedRows)) {
+            return;
+        }
+
+        //CHBaseModel::getBuilder()->table('channel_loads')->insert($insertedRows);
     }
 }

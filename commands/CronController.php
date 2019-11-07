@@ -2,12 +2,13 @@
 
 namespace app\commands;
 
+use app\modules\statistic\models\MonitLoadChannels;
 use yii\console\Controller;
 
 class CronController extends Controller
 {
-    public function actionAdd()
+    public function actionChannelLoads()
     {
-        echo "OK" . "\n";
+        MonitLoadChannels::saveLoadChannels();
     }
 }
