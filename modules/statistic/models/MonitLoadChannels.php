@@ -8,7 +8,7 @@ class MonitLoadChannels extends CHBaseModel
 {
     public static function getLoad()
     {
-        date_default_timezone_set('Europe/Moscow');
+        //date_default_timezone_set('Europe/Moscow');
         $dayBegin = mktime(0, 0, 0);
         $dayEnd = mktime(23, 59, 59);
 
@@ -53,7 +53,7 @@ class MonitLoadChannels extends CHBaseModel
             return;
         }
 
-        date_default_timezone_set('Europe/Moscow');
+        //date_default_timezone_set('Europe/Moscow');
         $monthBegin = strtotime(date('Y-m-01'));
         $dayBegin = mktime(0, 0, 0);
         $hourBegin = strtotime(date('Y-m-d H:0:0'));
