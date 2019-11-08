@@ -114,6 +114,11 @@ class Bootstrap implements BootstrapInterface
             */
         ]);
 
+        Router::addGET(
+            'api/v1/channels/load',
+            'rest/channels/load/day'
+        );
+
         Router::init();
     }
 }

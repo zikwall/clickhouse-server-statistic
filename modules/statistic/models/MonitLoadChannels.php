@@ -13,7 +13,7 @@ class MonitLoadChannels extends CHBaseModel
         $dayEnd = mktime(23, 59, 59);
 
         $query = self::find()
-            ->select([raw('sum(count) as sumHour'), 'url_protocol', 'hour_begin'])
+            ->select([raw('sum(count) as sumHour'), raw('COUNT(count) as countRealFive'), 'url_protocol', 'hour_begin'])
             ->from('channel_loads')
             ->where('month_begin', '>=', strtotime(date('Y-m-01')))
             ->where('day_begin', '>=', $dayBegin)
