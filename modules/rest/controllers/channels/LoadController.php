@@ -9,6 +9,12 @@ class LoadController extends BaseController
 {
     public function actionDay()
     {
-        return $this->asJson(MonitLoadChannels::getLoad()->getRows());
+        $time = 0;
+
+        if (\Yii::$app->request->getIsPost()) {
+            $time = \Yii::$app->request->post('time', 0);
+        }
+
+        return $this->asJson(MonitLoadChannels::getLoad($time)->getRows());
     }
 }

@@ -6,11 +6,16 @@ use app\modules\clickhouse\models\CHBaseModel;
 
 class MonitLoadChannels extends CHBaseModel
 {
-    public static function getLoad()
+    public static function getLoad(int $requestTime = 0)
     {
         //date_default_timezone_set('Europe/Moscow');
         $dayBegin = mktime(0, 0, 0);
         $dayEnd = mktime(23, 59, 59);
+
+        if ($requestTime > 0) {
+            $dayBegin = $requestTime;
+            $dayEnd = $requestTime + 86400;
+        }
 
         $query = self::find()
             ->select([raw('sum(count) as sumHour'), raw('COUNT(count) as countRealFive'), 'url_protocol', 'hour_begin'])
