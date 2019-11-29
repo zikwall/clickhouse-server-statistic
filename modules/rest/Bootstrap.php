@@ -43,6 +43,7 @@ class Bootstrap implements BootstrapInterface
             ['pattern' => 'api/v1/general/get-channels-uniq-users', 'route' => 'rest/channels/channels/get-channels-uniq-users', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/general/get-start-app', 'route' => 'rest/channels/channels/get-start-app', 'verb' => ['POST', 'OPTIONS']],
             ['pattern' => 'api/v1/general/get-channels-uniq-users-with-evtp', 'route' => 'rest/channels/channels/get-channels-uniq-users-with-evtp', 'verb' => ['POST', 'OPTIONS']],
+            ['pattern' => 'api/v1/general/get-channels-uniq-users-by-account', 'route' => 'rest/channels/channels/get-channels-uniq-users-by-account', 'verb' => ['POST', 'OPTIONS']],
             //['pattern' => 'api/v1/general/get-chef-parameter', 'route' => 'rest/channels/channels/get-chef-parameter', 'verb' => ['POST', 'OPTIONS']],
             //User block
             ['pattern' => 'api/v1/user/channels/update', 'route' => 'rest/user/user/user-channels-update', 'verb' => ['POST', 'OPTIONS']],
