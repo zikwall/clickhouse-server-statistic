@@ -164,4 +164,22 @@ class MonitChannels extends CHBaseModel
 
         return self::execute($query);
     }
+    
+    public static function getChannelsUniqUsersByAccount($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select([
+                    'vcid',
+                    raw('COUNT(DISTINCT device_id) as cnt')
+                ])
+                ->from('stat')
+                ->where('vcid', 'in', $userChannels)
+                ->where('day_begin', '>=', $dayBegin)
+                ->where('day_begin', '<=', $dayEnd)
+                ->where('adsst', '=', 'NULL')
+                ->where('evtp', '!=', 666666)
+                ->groupBy(['vcid']);
+        
+        return self::execute($query);
+    }
 }

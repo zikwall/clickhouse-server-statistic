@@ -176,4 +176,34 @@ class ChannelsController extends BaseController
             'channelsUniqUsersWithEvtp' => $channelsUniqUsersWithEvtp
         ]);
     }
+    
+    public function actionGetChannelsUniqUsersByAccount()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $userChannelsFormatedList = array_column($userChannels, 'name' ,'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getChannelsUniqUsersByAccount($userChannelsIds, $dayBegin, $dayEnd);
+        $channelsUniqUsersByAccount = [];
+
+        if (is_null($data)) {
+            return null;
+        }
+        
+        foreach ($data as $key => $item) {
+            $channelsUniqUsersByAccount['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsUniqUsersByAccount['vcid'] = $item['vcid'];
+            $channelsUniqUsersByAccount['cnt'] = $item['cnt'];
+        }
+        
+        return $this->asJson([
+            $channelsUniqUsersByAccount
+        ]);
+    }
 }
