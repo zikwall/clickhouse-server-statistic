@@ -197,9 +197,9 @@ class ChannelsController extends BaseController
         }
         
         foreach ($data as $key => $item) {
-            $channelsUniqUsersByAccount['name'] = $userChannelsFormatedList[$item['vcid']];
-            $channelsUniqUsersByAccount['vcid'] = $item['vcid'];
-            $channelsUniqUsersByAccount['cnt'] = $item['cnt'];
+            $channelsUniqUsersByAccount[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsUniqUsersByAccount[$item['vcid']]['vcid'] = $item['vcid'];
+            $channelsUniqUsersByAccount[$item['vcid']]['cnt'] = $item['cnt'];
         }
         
         return $this->asJson([
@@ -234,7 +234,7 @@ class ChannelsController extends BaseController
             
             foreach ($item['groupData'] as $groupData) {
                 if ($groupData[0] == 0) {
-                    $channelsData[$item['vcid']]['online'] = $grouData[1];
+                    $channelsData[$item['vcid']]['online'] = $groupData[1];
                 }
                 
                 if ($groupData[0] == 1) {
