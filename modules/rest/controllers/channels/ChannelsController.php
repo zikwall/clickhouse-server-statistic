@@ -218,7 +218,7 @@ class ChannelsController extends BaseController
         $dayBegin = $request->post('dayBegin');
         $dayEnd = $request->post('dayEnd');
         $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
-        $userChannnelsIds = array_keys($userChannelsFormatedList);
+        $userChannelsIds = array_keys($userChannelsFormatedList);
         $data = MonitChannels::getChannelsViewDurationWithChannelsId($userChannelsIds, $dayBegin, $dayEnd);
         $channelsData = [];
         

@@ -173,7 +173,7 @@ class MonitChannels extends CHBaseModel
                     raw('COUNT(DISTINCT device_id) as cnt')
                 ])
                 ->from('stat')
-                ->where('vcid', 'in', $userChannels)
+                ->whereIn('vcid', $userChannels)
                 ->where('day_begin', '>=', $dayBegin)
                 ->where('day_begin', '<=', $dayEnd)
                 ->where('adsst', '=', 'NULL')
