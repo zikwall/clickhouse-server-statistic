@@ -206,4 +206,45 @@ class ChannelsController extends BaseController
             $channelsUniqUsersByAccount
         ]);
     }
+    
+    public function actionGetChannelsViewDurationWithChannelsId()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannnelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getChannelsViewDurationWithChannelsId($userChannelsIds, $dayBegin, $dayEnd);
+        $channelsData = [];
+        
+        if (is_null($data)) {
+            return null;
+        }
+        
+        foreach ($data as $key => $item) {
+            
+            $channelsData[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsData[$item['vcid']]['online'] = 0;
+            $channelsData[$item['vcid']]['archive'] = 0;
+            
+            foreach ($item['groupData'] as $groupData) {
+                if ($groupData[0] == 0) {
+                    $channelsData[$item['vcid']]['online'] = $grouData[1];
+                }
+                
+                if ($groupData[0] == 1) {
+                    $channelsData[$item['vcid']]['archive'] = $groupData[2];
+                }
+            }
+        }
+        
+        return $this->asJson([
+            $channelsData
+        ]);
+    }
 }

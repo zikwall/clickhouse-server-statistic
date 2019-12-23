@@ -182,4 +182,35 @@ class MonitChannels extends CHBaseModel
         
         return self::execute($query);
     }
+    
+    public static function getChannelsViewDurationWithChannelsId($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select([
+                    'vcid',
+                    raw('groupArray([toString(evtp), toString(ctnarch), toString(ctnonline)]) as groupData')
+                ])
+                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd) {
+                    $from = $from->query();
+
+                    $from
+                    ->select([
+                        'vcid',
+                        'evtp',
+                        raw('countIf(evtp = 0) as ctnarch'),
+                        raw('countIf(evtp = 1) as ctnonline')
+                    ])
+                    ->from('stat')
+                    ->whereIn('vcid', $userChannels)
+                    ->where('day_begin', '>=', $dayBegin)
+                    ->where('day_begin', '<=', $dayEnd)
+                    ->where('adsst', '=', 'NULL')
+                    ->where('action', '!=', 'opening-channel')
+                    ->where('evtp', '!=', 666666)
+                    ->groupBy(['vcid', 'evtp']);
+                })
+                ->groupBy(['vcid']);
+
+        return self::execute($query);
+    }
 }
