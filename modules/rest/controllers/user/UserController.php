@@ -6,6 +6,7 @@ use app\modules\rest\components\BaseController;
 use app\modules\user\models\UserChannels;
 use app\modules\user\models\User;
 use app\modules\user\models\UserPermissions;
+use app\modules\user\models\Permissions;
 
 class UserController extends BaseController
 {
@@ -108,21 +109,31 @@ class UserController extends BaseController
     }
     
     public function actionConfirm($id) {
+        $permission = Permissions::findOne([
+                    'permission' => 'canViewPrivate'
+        ]);
+
+        if ($permission === null) {
+            return [
+                'message' => 'Not found permission'
+            ];
+        }
+        
         $user = User::findOne($id);
 
         if ($user === null) {
-            throw new NotFoundHttpException();
+            return [
+                'message' => 'Not found user'
+            ];
         }
 
         $user->confirmed_at = time();
         $user->save();
-               
-        $permissionId = 5;
-        
+                
         $permissionLink = Yii::createObject([
             'class' => UserPermissions::class,
             'user_id' => $id,
-            'permission_id' => $permissionId
+            'permission_id' => $permission->id,
         ]);
 
         if (!$permissionLink->create()) {
@@ -140,7 +151,9 @@ class UserController extends BaseController
         $user = User::findOne($id);
         
         if ($user === null) {
-            throw new NotFoundHttpException();
+            return [
+                'message' => 'User not found'
+            ];
         }
 
         $user->confirmed_at = null;
@@ -149,7 +162,9 @@ class UserController extends BaseController
         $userPermissions = new UserPermissions();
         
         if ($userPermissions->terminate($id) == false) {
-            throw new NotFoundHttpException();
+            return [
+                'message' => 'Not found user persmissions'
+            ];
         }
         
         return $this->asJson([
