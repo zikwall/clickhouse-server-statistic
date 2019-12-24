@@ -192,4 +192,75 @@ class ChannelsController extends BaseController
             'startAllApp' => $data
         ]);
     }
+        
+    public function actionGetChannelsUniqUsersByAccount()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $userChannelsFormatedList = array_column($userChannels, 'name' ,'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getChannelsUniqUsersByAccount($userChannelsIds, $dayBegin, $dayEnd);
+        $channelsUniqUsersByAccount = [];
+
+        if (is_null($data)) {
+            return null;
+        }
+        
+        foreach ($data as $key => $item) {
+            $channelsUniqUsersByAccount[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsUniqUsersByAccount[$item['vcid']]['vcid'] = $item['vcid'];
+            $channelsUniqUsersByAccount[$item['vcid']]['cnt'] = $item['cnt'];
+        }
+        
+        return $this->asJson([
+            $channelsUniqUsersByAccount
+        ]);
+    }
+    
+    public function actionGetChannelsViewDurationWithChannelsId()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getChannelsViewDurationWithChannelsId($userChannelsIds, $dayBegin, $dayEnd);
+        $channelsData = [];
+        
+        if (is_null($data)) {
+            return null;
+        }
+        
+        foreach ($data as $key => $item) {
+            
+            $channelsData[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsData[$item['vcid']]['online'] = 0;
+            $channelsData[$item['vcid']]['archive'] = 0;
+            
+            foreach ($item['groupData'] as $groupData) {
+                if ($groupData[0] == 0) {
+                    $channelsData[$item['vcid']]['online'] = $groupData[1];
+                }
+                
+                if ($groupData[0] == 1) {
+                    $channelsData[$item['vcid']]['archive'] = $groupData[2];
+                }
+            }
+        }
+        
+        return $this->asJson([
+            $channelsData
+        ]);
+    }
 }

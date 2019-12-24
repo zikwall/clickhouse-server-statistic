@@ -51,7 +51,7 @@ class RegistrationForm extends Model
         $user = $this->module->modelMap['User'];
 
         return [
-            [['code'], 'required'],
+            //[['code'], 'required'],
             // username rules
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernameTrim'     => ['username', 'filter', 'filter' => 'trim'],
@@ -95,17 +95,17 @@ class RegistrationForm extends Model
     /**
      * @inheritdoc
      */
-    public function formName()
+    /*public function formName()
     {
         return 'register-form';
-    }
+    }*/
 
     /**
      * @return bool
      * @throws \yii\base\InvalidConfigException
      */
     public function register()
-    {
+    { 
         if (!$this->validate()) {
             return false;
         }
