@@ -19,7 +19,7 @@ class m191008_101458_add_table_new_user_channels extends Migration
             'channel_id'    => $this->integer(),
         ]);
         
-        $this->createIndex('user_channel_index', 'new_user_channels', ['user_id', 'channel_id'], true);
+        $this->createIndex('user_channel_index', '{{%user_channels}}', ['user_id', 'channel_id'], true);
     }
 
     /**
@@ -28,7 +28,7 @@ class m191008_101458_add_table_new_user_channels extends Migration
     public function safeDown()
     {
         $this->dropIndex('user_channel_index', UserChannels::tableName());
-        $this->dropTable('new_user_channels');
+        $this->dropTable('{{%user_channels}}');
     }
 
     /*
