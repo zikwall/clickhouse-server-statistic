@@ -30,7 +30,8 @@ class MonitData extends CHBaseModel
         'getintent',
         'videonow',
         '1xbet',
-        'MyTarget'
+        'MyTarget',
+        'hyperaudience'
     ];
 
     const BROADCASTERS = [
