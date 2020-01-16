@@ -101,6 +101,7 @@ class UserController extends BaseController
             'confirmed_at',
             'blocked_at',
             'registration_ip',
+            'description',
             'created_at',
             'updated_at'
             ])->where(['not in', 'id', $this->user->id])->asArray()->all();
@@ -109,6 +110,10 @@ class UserController extends BaseController
     }
     
     public function actionConfirm($id) {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
         $permission = Permissions::findOne([
                     'permission' => 'canViewPrivate'
         ]);
@@ -148,6 +153,10 @@ class UserController extends BaseController
     }
 
     public function actionUnconfirm($id) {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
         $user = User::findOne($id);
         
         if ($user === null) {
