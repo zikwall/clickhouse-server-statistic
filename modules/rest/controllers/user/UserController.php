@@ -195,4 +195,26 @@ class UserController extends BaseController
         return $this->asJson($list);
     }
 
+    public function actionCreateUser()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $model = new User();
+        $model->setScenario('createUserByManager');
+        
+        if (!$model->load(Yii::$app->request->post(), '')) {
+            throw new \yii\web\ServerErrorHttpException;
+        }
+        
+        if (!$model->createByManager()) {
+            throw new \yii\web\BadRequestHttpException;
+        }
+
+        return $this->asJson([
+            'status' => true
+        ]);
+    }
+
 }
