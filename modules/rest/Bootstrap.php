@@ -36,6 +36,11 @@ class Bootstrap implements BootstrapInterface
                 'path' => 'rest/user/user/unconfirm',
                 'verb' => ['GET', 'OPTIONS']
             ],
+            [
+                'url' => 'create',
+                'path' => 'rest/user/user/create-user',
+                'verb' => ['POST', 'OPTIONS']
+            ],
         ]);
 
         Router::addGET(
