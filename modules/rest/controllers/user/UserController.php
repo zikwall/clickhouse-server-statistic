@@ -40,7 +40,8 @@ class UserController extends BaseController
         }
         
         $channels = Yii::$app->request->post('channels');
-        
+        $userId = Yii::$app->request->post('user');
+
         if (sizeof($channels) == 0) {
             return $this->asJson([
                 'message' => 'Not found',
@@ -49,7 +50,7 @@ class UserController extends BaseController
         }
         
         $userChannels = UserChannels::find()->select(['channel_id'])
-                ->where(['user_id' => $this->user->id])
+                ->where(['user_id' => $userId])
                 ->asArray()
                 ->all();
         $userChannels = \yii\helpers\ArrayHelper::getColumn($userChannels, 'channel_id');
@@ -64,7 +65,7 @@ class UserController extends BaseController
             }
             
             $insertList[] = [
-                $this->user->id,
+                $userId,
                 $channel
             ];
         }
@@ -72,7 +73,7 @@ class UserController extends BaseController
         if (sizeof($deleteList) > 0) {
             UserChannels::deleteAll([
                 'AND',
-                'user_id' => $this->user->id,
+                'user_id' => $userId,
                 ['in', 'channel_id', $deleteList]
                     ]);
         }
@@ -183,13 +184,13 @@ class UserController extends BaseController
         ]);
     }
     
-    public function actionGetUserChannels()
+    public function actionGetUserChannels($id)
     {
         if (Yii::$app->request->getIsOptions()) {
             return true;
         }
 
-        $userChannels = UserChannels::findAll(['user_id' => $this->user->id]);
+        $userChannels = UserChannels::findAll(['user_id' => $id]);
         $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
 
         $list = array_map(function($channel) use ($nameChannels) {
