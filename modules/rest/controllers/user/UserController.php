@@ -105,7 +105,7 @@ class UserController extends BaseController
             'description',
             'created_at',
             'updated_at'
-            ])->where(['not in', 'id', $this->user->id])->asArray()->all();
+            ])->asArray()->all();
         
         return $this->asJson($accounts);
     }
@@ -126,7 +126,7 @@ class UserController extends BaseController
         }
         
         $user = User::findOne($id);
-
+        
         if ($user === null) {
             return [
                 'message' => 'Not found user'
@@ -153,6 +153,7 @@ class UserController extends BaseController
         ]);
     }
 
+    // TODO: сделать по нормальному
     public function actionUnconfirm($id) {
         if (Yii::$app->request->getIsOptions()) {
             return true;
@@ -166,6 +167,12 @@ class UserController extends BaseController
             ];
         }
 
+        if (in_array('canViewDashboard', $user->getPermissionList())) {
+            return [
+                'message' => 'No permissions for delete'
+            ];
+        }
+        
         $user->confirmed_at = null;
         $user->save();
         
