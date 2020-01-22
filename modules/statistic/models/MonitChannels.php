@@ -225,4 +225,18 @@ class MonitChannels extends CHBaseModel
 
         return self::execute($query);
     }
+    
+    public static function getStartChannelsOfPartner($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select(['vcid', raw('COUNT(*) as cnt')])
+                ->from('stat')
+                ->whereIn('vcid', $userChannels)
+                ->where('day_begin', '>=', $dayBegin)
+                ->where('day_begin', '<=', $dayEnd)
+                ->where('action', '=', 'opening-channel')
+                ->groupBy(['vcid']);
+
+        return self::execute($query);
+    }
 }

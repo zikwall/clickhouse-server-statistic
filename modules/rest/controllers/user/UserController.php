@@ -184,10 +184,22 @@ class UserController extends BaseController
         ]);
     }
     
-    public function actionGetUserChannels($id)
+    /**
+     * Список телеканалов пользователя
+     * 
+     * @param integer $id
+     * @return array
+     */
+    public function actionGetUserChannels($id = null)
     {
         if (Yii::$app->request->getIsOptions()) {
             return true;
+        }
+        
+        //Если не передали id, то запрос от авторизированного пользователя
+        //Знаю что говнокод. Но вынужден пока так. Переделаю потом.
+        if (is_null($id)) {
+            $id = $this->user->id;
         }
 
         $userChannels = UserChannels::findAll(['user_id' => $id]);

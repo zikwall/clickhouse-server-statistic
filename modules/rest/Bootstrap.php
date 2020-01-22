@@ -135,7 +135,12 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/channels/channels/get-channels-view-duration-with-channels-id',
                 'verb'      => ['POST', 'OPTIONS']
             ],
-            /*
+            [
+                'pattern'   => 'api/v1/general/get-start-channels-of-partner',
+                'route'     => 'rest/channels/channels/get-start-channels-of-partner',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
+                /*
             [
                 'pattern'   => 'api/v1/general/get-chef-parameter',
                 'route'     => 'rest/channels/channels/get-chef-parameter',
