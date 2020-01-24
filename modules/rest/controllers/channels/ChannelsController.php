@@ -263,4 +263,34 @@ class ChannelsController extends BaseController
             $channelsData
         ]);
     }
+    
+    public function actionGetStartChannelsOfPartner()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        
+        if (is_null($userChannels)) {
+            return false;
+        }
+        
+        $startChannels = [];
+        
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getStartChannelsOfPartner($userChannelsIds, $dayBegin, $dayEnd);
+        
+        foreach ($data->rows as $key => $item) {
+            $startChannels[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $startChannels[$item['vcid']]['online'] = $item['cnt'];
+        }
+        
+        return $this->asJson($startChannels);
+    }
+
 }
