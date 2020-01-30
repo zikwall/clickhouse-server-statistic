@@ -65,6 +65,11 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/ads/ads/get-ads-data',
                 'verb'      => ['POST']
             ],
+            [
+                'pattern'   => 'get-ads-data-of-partner-channels',
+                'route'     => 'rest/ads/ads/get-ads-data-of-partner-channels',
+                'verb'      => ['POST']
+            ],
         ]);
 
         Router::addRoutes([

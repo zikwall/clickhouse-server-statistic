@@ -85,4 +85,48 @@ class MonitAds extends CHBaseModel
         //return $query->toSql();
         return self::execute($query);
     }
+    
+    /**
+     * 
+     * @param type $userChannelsIds
+     * @param type $dayBegin
+     * @param type $dayEnd
+     * @return type \Tinderbox\Clickhouse\Query\Result
+     */
+    public static function getDataOfPartnerChannels($userChannelsIds, $dayBegin, $dayEnd)
+    {
+        $query = Monit::find()
+                        ->select([
+                            'vcid',
+                            'adsid',
+                            raw('groupArray([toString(adsst), toString(countAdsst)]) as groupData')
+                        ])
+                        ->from(function (From $from) use ($userChannelsIds, /* $isAllEventType, */ $dayBegin, $dayEnd) {
+                            $from->query()->select([
+                                'adsid',
+                                'adsst',
+                                'vcid',
+                                raw('COUNT(adsst) as countAdsst'),
+                            ])->from('stat')
+                            ->where(function (Builder $query) use ($userChannelsIds) {
+                                $query->where('vcid', $userChannelsIds);
+                            })
+                            
+                            ->where(function (Builder $query) {
+                                $query
+                                ->where('adsid', '!=', '')
+                                ->where('adsid', '!=', 'NULL')
+                                ->where('adsid', '!=', 'null')
+                                ->where('adsst', '!=', 'NULL');
+                            })
+                            ->where(function (Builder $query) use ($dayBegin, $dayEnd) {
+                                $query
+                                ->where('day_begin', '>=', $dayBegin)
+                                ->where('day_begin', '<=', $dayEnd);
+                            })
+                            ->groupBy('adsid', 'adsst', 'vcid');
+                        })->groupBy('adsid', 'vcid');
+                        
+       return self::execute($query);
+    }
 }
