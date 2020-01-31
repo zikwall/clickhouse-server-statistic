@@ -36,6 +36,11 @@ class Bootstrap implements BootstrapInterface
                 'path' => 'rest/user/user/unconfirm',
                 'verb' => ['GET', 'OPTIONS']
             ],
+            [
+                'url' => 'create',
+                'path' => 'rest/user/user/create-user',
+                'verb' => ['POST', 'OPTIONS']
+            ],
         ]);
 
         Router::addGET(
@@ -58,6 +63,11 @@ class Bootstrap implements BootstrapInterface
             [
                 'pattern'   => 'get-ads-data',
                 'route'     => 'rest/ads/ads/get-ads-data',
+                'verb'      => ['POST']
+            ],
+            [
+                'pattern'   => 'get-ads-data-of-partner-channels',
+                'route'     => 'rest/ads/ads/get-ads-data-of-partner-channels',
                 'verb'      => ['POST']
             ],
         ]);
@@ -130,7 +140,12 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/channels/channels/get-channels-view-duration-with-channels-id',
                 'verb'      => ['POST', 'OPTIONS']
             ],
-            /*
+            [
+                'pattern'   => 'api/v1/general/get-start-channels-of-partner',
+                'route'     => 'rest/channels/channels/get-start-channels-of-partner',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
+                /*
             [
                 'pattern'   => 'api/v1/general/get-chef-parameter',
                 'route'     => 'rest/channels/channels/get-chef-parameter',
