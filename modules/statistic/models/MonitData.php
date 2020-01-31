@@ -14,6 +14,7 @@ class MonitData extends CHBaseModel
         'liteios',
         'limehd.ru.ctv',
         'ctvios',
+        'mejortvios',
         'ru.limelime.Tizen',
         'ru.limelime.webOs',
         'ru.limelime.NetCast',
@@ -32,8 +33,7 @@ class MonitData extends CHBaseModel
         'videonow',
         '1xbet',
         'MyTarget',
-        'hyperaudience',
-        'mejortvios'
+        'hyperaudience'
     ];
 
     const BROADCASTERS = [
