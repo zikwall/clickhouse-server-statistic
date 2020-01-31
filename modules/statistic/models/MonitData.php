@@ -23,7 +23,7 @@ class MonitData extends CHBaseModel
 
     const FIRST_RECORD_DATE = 1564002000;
     const FIRST_RECORD_DATE_PARTNERS = 1575158400;
-            
+
     const ADS_ID = [
         'regionmedia',
         'yandex',
@@ -32,7 +32,8 @@ class MonitData extends CHBaseModel
         'videonow',
         '1xbet',
         'MyTarget',
-        'hyperaudience'
+        'hyperaudience',
+        'mejortvios'
     ];
 
     const BROADCASTERS = [
@@ -61,7 +62,7 @@ class MonitData extends CHBaseModel
         if ($partner) {
             return [self::FIRST_RECORD_DATE_PARTNERS, mktime(0,0,0)];
         }
-        
+
         return [self::FIRST_RECORD_DATE, mktime(0, 0, 0)];
     }
 
