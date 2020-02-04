@@ -292,5 +292,79 @@ class ChannelsController extends BaseController
         
         return $this->asJson($startChannels);
     }
+    
+    public function actionGetChannelsByGadgetTypes()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
 
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+
+        if (is_null($userChannels)) {
+            return false;
+        }
+
+        $startChannels = [];
+
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        
+        
+        $groups = [
+            'mobile' => [
+                //android
+                'com.infolink.limeiptv',
+                'limehd.ru.lite',
+                'limehd.ru.ctv',
+                //ios
+                'com.infolink.LimeHDTV',
+                'liteios',
+                'ctvios',
+            ],
+            'smarttv' => [
+                'ru.limelime.NetCast',
+                'limehd.ru.ctvshka',
+                'ru.limelime.Tizen',
+                'ru.limelime.webOs',
+            ],
+            'web' => [
+                'web'
+            ]
+        ];
+
+        $data = MonitChannels::getChannelsByGadgetTypes($userChannelsIds, $dayBegin, $dayEnd);
+        $channelGadgets = [];
+
+        foreach ($data->rows as $key => $item) {
+            if (in_array($item['app'], $groups['mobile'])) {
+                if (!isset($channelGadgets[$item['vcid']]['mobile'])) {
+                    $channelGadgets[$item['vcid']]['mobile'] = $item['cnt'];
+                } else {
+                    $channelGadgets[$item['vcid']]['mobile'] += $item['cnt'];
+                }
+            }
+            if (in_array($item['app'], $groups['smarttv'])) {
+                if (!isset($channelGadgets[$item['vcid']]['smarttv'])) {
+                    $channelGadgets[$item['vcid']]['smarttv'] = $item['cnt'];
+                } else {
+                    $channelGadgets[$item['vcid']]['smarttv'] += $item['cnt'];
+                }
+            }
+            if (in_array($item['app'], $groups['web'])) {
+                if (!isset($channelGadgets[$item['vcid']]['web'])) {
+                    $channelGadgets[$item['vcid']]['web'] = $item['cnt'];
+                } else {
+                    $channelGadgets[$item['vcid']]['web'] += $item['cnt'];
+                }
+            }
+            $channelGadgets[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+        }
+        
+        return $this->asJson($channelGadgets);
+    }
 }
+

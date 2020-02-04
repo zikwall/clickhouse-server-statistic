@@ -145,6 +145,11 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/channels/channels/get-start-channels-of-partner',
                 'verb'      => ['POST', 'OPTIONS']
             ],
+            [
+                'pattern'   => 'api/v1/general/get-channels-by-gadget-types',
+                'route'     => 'rest/channels/channels/get-channels-by-gadget-types',
+                'verb'      => ['POST', 'OPTIONS'],
+            ]
                 /*
             [
                 'pattern'   => 'api/v1/general/get-chef-parameter',
