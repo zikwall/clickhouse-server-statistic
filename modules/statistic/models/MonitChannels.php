@@ -239,4 +239,29 @@ class MonitChannels extends CHBaseModel
 
         return self::execute($query);
     }
+    
+    public static function getChannelsByGadgetTypes($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select(['vcid','app', raw('COUNT(DISTINCT device_id) as cnt')])
+                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd) {
+                    $from = $from->query();
+                           
+                    $from
+                        ->select([
+                            'vcid',
+                            'app',
+                            'device_id'
+                        ])
+                        ->from('stat')
+                        ->whereIn('vcid', $userChannels)
+                        ->where('day_begin', '>=', $dayBegin)
+                        ->where('day_begin', '<=', $dayEnd)
+                        ->where('month_begin', '>=', strtotime(date('Y-m-01', $dayBegin)))
+                    ->groupBy(['vcid', 'app', 'device_id']);
+                })
+                ->groupBy(['vcid', 'app']);
+                
+        return self::execute($query);
+    }
 }
