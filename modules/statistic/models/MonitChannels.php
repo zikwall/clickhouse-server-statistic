@@ -257,7 +257,7 @@ class MonitChannels extends CHBaseModel
                         ->whereIn('vcid', $userChannels)
                         ->where('day_begin', '>=', $dayBegin)
                         ->where('day_begin', '<=', $dayEnd)
-                        ->where('month_begin', '>=', strtotime(date('Y-m-01', $dayBegin)))
+                        //->where('month_begin', '>=', strtotime(date('Y-m-01', $dayBegin)))
                     ->groupBy(['vcid', 'app', 'device_id']);
                 })
                 ->groupBy(['vcid', 'app']);
