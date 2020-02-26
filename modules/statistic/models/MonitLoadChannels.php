@@ -67,10 +67,10 @@ class MonitLoadChannels extends CHBaseModel
 
         foreach ($online as $url => $count) {
             $insertedRows[] = [
-                'month_begin'  => $monthBegin,
-                'day_begin'    => $dayBegin,
-                'hour_begin'   => $hourBegin,
-                'url_protocol' => $url,
+                'month_begin'  => (int) $monthBegin,
+                'day_begin'    => (int) $dayBegin,
+                'hour_begin'   => (int) $hourBegin,
+                'url_protocol' => (string) $url,
                 'count'        => (int) $count
             ];
         };
