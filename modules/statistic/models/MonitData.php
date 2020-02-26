@@ -14,6 +14,7 @@ class MonitData extends CHBaseModel
         'liteios',
         'limehd.ru.ctv',
         'ctvios',
+        'mejortvios',
         'ru.limelime.Tizen',
         'ru.limelime.webOs',
         'ru.limelime.NetCast',
@@ -22,6 +23,7 @@ class MonitData extends CHBaseModel
     ];
 
     const FIRST_RECORD_DATE = 1564002000;
+    const FIRST_RECORD_DATE_PARTNERS = 1575158400;
 
     const ADS_ID = [
         'regionmedia',
@@ -30,7 +32,8 @@ class MonitData extends CHBaseModel
         'getintent',
         'videonow',
         '1xbet',
-        'MyTarget'
+        'MyTarget',
+        'hyperaudience'
     ];
 
     const BROADCASTERS = [
@@ -54,8 +57,12 @@ class MonitData extends CHBaseModel
         return self::APP;
     }
 
-    public static function getPeriod()
+    public static function getPeriod($partner = false)
     {
+        if ($partner) {
+            return [self::FIRST_RECORD_DATE_PARTNERS, mktime(0,0,0)];
+        }
+
         return [self::FIRST_RECORD_DATE, mktime(0, 0, 0)];
     }
 

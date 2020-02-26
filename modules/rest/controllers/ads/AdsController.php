@@ -42,4 +42,36 @@ class AdsController extends BaseController
             'adsData' => array_values($data)
         ]);
     }
+    
+    public function actionGetAdsDataOfPartnerChannels()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+                return true;
+        }
+
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+
+        $data = MonitAds::getDataOfPartnerChannels($userChannelsIds, $dayBegin, $dayEnd)->rows;
+        $arrAdsId = MonitData::getAdsId();
+
+        foreach($data as $k => $v) {
+            if (!in_array($v['adsid'], $arrAdsId)) {
+                unset($data[$k]);
+            } else {
+                $data[$k]['name'] = $userChannelsFormatedList[$v['vcid']];
+            }
+        }
+
+
+        return $this->asJson([
+            'adsData' => array_values($data)
+        ]);
+
+    }
 }

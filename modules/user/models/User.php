@@ -39,7 +39,8 @@ use yii\helpers\ArrayHelper;
  * @property integer $created_at
  * @property integer $updated_at
  * @property integer $flags
- *
+ * @property integer $description
+ * 
  * Defined relations:
  * @property Account[] $accounts
  * @property Profile   $profile
@@ -96,6 +97,7 @@ class User extends ActiveRecord implements IdentityInterface
             'password'          => Yii::t('user', 'Password'),
             'created_at'        => Yii::t('user', 'Registration time'),
             'confirmed_at'      => Yii::t('user', 'Confirmation time'),
+            
         ];
     }
 
@@ -128,22 +130,24 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             // username rules
-            'usernameRequired' => ['username', 'required', 'on' => ['register', 'create', 'connect', 'update']],
+            'usernameRequired' => ['username', 'required', 'on' => ['register', 'create', 'connect', 'update', 'createUserByManager']],
             'usernameMatch'    => ['username', 'match', 'pattern' => static::$usernameRegexp],
             'usernameLength'   => ['username', 'string', 'min' => 3, 'max' => 255],
             'usernameUnique'   => ['username', 'unique', 'message' => Yii::t('user', 'This username has already been taken')],
             'usernameTrim'     => ['username', 'trim'],
 
             // email rules
-            'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update']],
+            'emailRequired' => ['email', 'required', 'on' => ['register', 'connect', 'create', 'update', 'createUserByManager']],
             'emailPattern'  => ['email', 'email'],
             'emailLength'   => ['email', 'string', 'max' => 255],
             'emailUnique'   => ['email', 'unique', 'message' => Yii::t('user', 'This email address has already been taken')],
             'emailTrim'     => ['email', 'trim'],
 
             // password rules
-            'passwordRequired' => ['password', 'required', 'on' => ['register']],
+            'passwordRequired' => ['password', 'required', 'on' => ['register', 'createUserByManager']],
             'passwordLength'   => ['password', 'string', 'min' => 6, 'on' => ['register', 'create']],
+            
+            'descriptionLength' => ['description', 'string', 'max' => 256],
         ];
     }
 
@@ -372,9 +376,9 @@ class User extends ActiveRecord implements IdentityInterface
             $token->link('user', $this);
         }
 
-        if(!InviteCode::invite($this)) {
+        /*if(!InviteCode::invite($this)) {
             throw new InvalidCallException('Invite not link to user!');
-        }
+        }*/
 
         $this->mailer->sendWelcomeMessage($this, isset($token) ? $token : null);
         $this->trigger(self::AFTER_REGISTER);
@@ -445,7 +449,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         return $this->username;
     }
-
+    
     /** @inheritdoc */
     public function beforeSave($insert)
     {
@@ -473,5 +477,25 @@ class User extends ActiveRecord implements IdentityInterface
             }
             $this->_profile->link('user', $this);
         }
+    }
+    
+    public function createByManager()
+    {
+        if ($this->getIsNewRecord() == false) {
+            throw new \RuntimeException('Calling "' . __CLASS__ . '::' . __METHOD__ . '" on existing user');
+        }
+
+        
+        $this->password = $this->password == null ? Password::generate(8) : $this->password;
+        
+        if (!$this->validate()) {
+            return false;
+        }
+        
+        if (!$this->save()) {
+            return false;
+        }
+        
+        return true;
     }
 }

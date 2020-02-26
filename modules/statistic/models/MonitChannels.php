@@ -173,7 +173,95 @@ class MonitChannels extends CHBaseModel
             ->where('action', '=', 'start-app')
             ->whereIn('app', MonitData::getApp(true))
             ->groupBy(['app']);
+        
+            return self::execute($query);
+    }
+    
+    public static function getChannelsUniqUsersByAccount($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select([
+                    'vcid',
+                    raw('COUNT(DISTINCT device_id) as cnt')
+                ])
+                ->from('stat')
+                ->whereIn('vcid', $userChannels)
+                ->where('day_begin', '>=', $dayBegin)
+                ->where('day_begin', '<=', $dayEnd)
+                ->where('adsst', '=', 'NULL')
+                ->where('evtp', '!=', 666666)
+                ->groupBy(['vcid']);
+        
+        return self::execute($query);
+    }
+    
+    public static function getChannelsViewDurationWithChannelsId($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select([
+                    'vcid',
+                    raw('groupArray([toString(evtp), toString(ctnarch), toString(ctnonline)]) as groupData')
+                ])
+                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd) {
+                    $from = $from->query();
 
+                    $from
+                    ->select([
+                        'vcid',
+                        'evtp',
+                        raw('countIf(evtp = 0) as ctnarch'),
+                        raw('countIf(evtp = 1) as ctnonline')
+                    ])
+                    ->from('stat')
+                    ->whereIn('vcid', $userChannels)
+                    ->where('day_begin', '>=', $dayBegin)
+                    ->where('day_begin', '<=', $dayEnd)
+                    ->where('adsst', '=', 'NULL')
+                    ->where('action', '!=', 'opening-channel')
+                    ->where('evtp', '!=', 666666)
+                    ->groupBy(['vcid', 'evtp']);
+                })
+                ->groupBy(['vcid']);
+
+        return self::execute($query);
+    }
+    
+    public static function getStartChannelsOfPartner($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select(['vcid', raw('COUNT(*) as cnt')])
+                ->from('stat')
+                ->whereIn('vcid', $userChannels)
+                ->where('day_begin', '>=', $dayBegin)
+                ->where('day_begin', '<=', $dayEnd)
+                ->where('action', '=', 'opening-channel')
+                ->groupBy(['vcid']);
+
+        return self::execute($query);
+    }
+    
+    public static function getChannelsByGadgetTypes($userChannels, $dayBegin, $dayEnd)
+    {
+        $query = self::find()
+                ->select(['vcid','app', raw('COUNT(DISTINCT device_id) as cnt')])
+                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd) {
+                    $from = $from->query();
+                           
+                    $from
+                        ->select([
+                            'vcid',
+                            'app',
+                            'device_id'
+                        ])
+                        ->from('stat')
+                        ->whereIn('vcid', $userChannels)
+                        ->where('day_begin', '>=', $dayBegin)
+                        ->where('day_begin', '<=', $dayEnd)
+                        //->where('month_begin', '>=', strtotime(date('Y-m-01', $dayBegin)))
+                    ->groupBy(['vcid', 'app', 'device_id']);
+                })
+                ->groupBy(['vcid', 'app']);
+                
         return self::execute($query);
     }
 }

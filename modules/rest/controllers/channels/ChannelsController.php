@@ -192,4 +192,179 @@ class ChannelsController extends BaseController
             'startAllApp' => $data
         ]);
     }
+        
+    public function actionGetChannelsUniqUsersByAccount()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $userChannelsFormatedList = array_column($userChannels, 'name' ,'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getChannelsUniqUsersByAccount($userChannelsIds, $dayBegin, $dayEnd);
+        $channelsUniqUsersByAccount = [];
+
+        if (is_null($data)) {
+            return null;
+        }
+        
+        foreach ($data as $key => $item) {
+            $channelsUniqUsersByAccount[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsUniqUsersByAccount[$item['vcid']]['vcid'] = $item['vcid'];
+            $channelsUniqUsersByAccount[$item['vcid']]['cnt'] = $item['cnt'];
+        }
+        
+        return $this->asJson([
+            $channelsUniqUsersByAccount
+        ]);
+    }
+    
+    public function actionGetChannelsViewDurationWithChannelsId()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getChannelsViewDurationWithChannelsId($userChannelsIds, $dayBegin, $dayEnd);
+        $channelsData = [];
+        
+        if (is_null($data)) {
+            return null;
+        }
+        
+        foreach ($data as $key => $item) {
+            
+            $channelsData[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $channelsData[$item['vcid']]['online'] = 0;
+            $channelsData[$item['vcid']]['archive'] = 0;
+            
+            foreach ($item['groupData'] as $groupData) {
+                if ($groupData[0] == 0) {
+                    $channelsData[$item['vcid']]['online'] = $groupData[1];
+                }
+                
+                if ($groupData[0] == 1) {
+                    $channelsData[$item['vcid']]['archive'] = $groupData[2];
+                }
+            }
+        }
+        
+        return $this->asJson([
+            $channelsData
+        ]);
+    }
+    
+    public function actionGetStartChannelsOfPartner()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+        
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+        
+        if (is_null($userChannels)) {
+            return false;
+        }
+        
+        $startChannels = [];
+        
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        $data = MonitChannels::getStartChannelsOfPartner($userChannelsIds, $dayBegin, $dayEnd);
+        
+        foreach ($data->rows as $key => $item) {
+            $startChannels[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+            $startChannels[$item['vcid']]['online'] = $item['cnt'];
+        }
+        
+        return $this->asJson($startChannels);
+    }
+    
+    public function actionGetChannelsByGadgetTypes()
+    {
+        if (Yii::$app->request->getIsOptions()) {
+            return true;
+        }
+
+        $request = Yii::$app->request;
+        $userChannels = $request->post('userChannels');
+        $dayBegin = $request->post('dayBegin');
+        $dayEnd = $request->post('dayEnd');
+
+        if (is_null($userChannels)) {
+            return false;
+        }
+
+        $startChannels = [];
+
+        $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
+        $userChannelsIds = array_keys($userChannelsFormatedList);
+        
+        
+        $groups = [
+            'mobile' => [
+                //android
+                'com.infolink.limeiptv',
+                'limehd.ru.lite',
+                'limehd.ru.ctv',
+                //ios
+                'com.infolink.LimeHDTV',
+                'liteios',
+                'ctvios',
+            ],
+            'smarttv' => [
+                'ru.limelime.NetCast',
+                'limehd.ru.ctvshka',
+                'ru.limelime.Tizen',
+                'ru.limelime.webOs',
+            ],
+            'web' => [
+                'web'
+            ]
+        ];
+
+        $data = MonitChannels::getChannelsByGadgetTypes($userChannelsIds, $dayBegin, $dayEnd);
+        $channelGadgets = [];
+
+        foreach ($data->rows as $key => $item) {
+            if (in_array($item['app'], $groups['mobile'])) {
+                if (!isset($channelGadgets[$item['vcid']]['mobile'])) {
+                    $channelGadgets[$item['vcid']]['mobile'] = $item['cnt'];
+                } else {
+                    $channelGadgets[$item['vcid']]['mobile'] += $item['cnt'];
+                }
+            }
+            if (in_array($item['app'], $groups['smarttv'])) {
+                if (!isset($channelGadgets[$item['vcid']]['smarttv'])) {
+                    $channelGadgets[$item['vcid']]['smarttv'] = $item['cnt'];
+                } else {
+                    $channelGadgets[$item['vcid']]['smarttv'] += $item['cnt'];
+                }
+            }
+            if (in_array($item['app'], $groups['web'])) {
+                if (!isset($channelGadgets[$item['vcid']]['web'])) {
+                    $channelGadgets[$item['vcid']]['web'] = $item['cnt'];
+                } else {
+                    $channelGadgets[$item['vcid']]['web'] += $item['cnt'];
+                }
+            }
+            $channelGadgets[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
+        }
+        
+        return $this->asJson($channelGadgets);
+    }
 }
+

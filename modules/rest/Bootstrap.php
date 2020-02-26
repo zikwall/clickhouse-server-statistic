@@ -20,7 +20,27 @@ class Bootstrap implements BootstrapInterface
             [
                 'url' => 'access',
                 'path' => 'rest/user/user/access'
-            ]
+            ],
+            [
+                'url' => 'register',
+                'path' => 'user/registration/register222',
+                'verb' => ['POST', 'OPTIONS']
+            ],
+            [
+                'url' => 'register/confirm',
+                'path' => 'rest/user/user/confirm',
+                'verb' => ['GET', 'OPTIONS']
+            ],
+            [
+                'url' => 'register/unconfirm',
+                'path' => 'rest/user/user/unconfirm',
+                'verb' => ['GET', 'OPTIONS']
+            ],
+            [
+                'url' => 'create',
+                'path' => 'rest/user/user/create-user',
+                'verb' => ['POST', 'OPTIONS']
+            ],
         ]);
 
         Router::addGET(
@@ -43,6 +63,11 @@ class Bootstrap implements BootstrapInterface
             [
                 'pattern'   => 'get-ads-data',
                 'route'     => 'rest/ads/ads/get-ads-data',
+                'verb'      => ['POST']
+            ],
+            [
+                'pattern'   => 'get-ads-data-of-partner-channels',
+                'route'     => 'rest/ads/ads/get-ads-data-of-partner-channels',
                 'verb'      => ['POST']
             ],
         ]);
@@ -105,7 +130,27 @@ class Bootstrap implements BootstrapInterface
                 'route'     => 'rest/app_users/app-users/get-user-intersection-android',
                 'verb'      => ['POST', 'OPTIONS']
             ],
-            /*
+            [
+                'pattern'   => 'api/v1/general/get-channels-uniq-users-by-account',
+                'route'     => 'rest/channels/channels/get-channels-uniq-users-by-account',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
+            [
+                'pattern'   => 'api/v1/general/get-channels-view-duration-with-channels-id',
+                'route'     => 'rest/channels/channels/get-channels-view-duration-with-channels-id',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
+            [
+                'pattern'   => 'api/v1/general/get-start-channels-of-partner',
+                'route'     => 'rest/channels/channels/get-start-channels-of-partner',
+                'verb'      => ['POST', 'OPTIONS']
+            ],
+            [
+                'pattern'   => 'api/v1/general/get-channels-by-gadget-types',
+                'route'     => 'rest/channels/channels/get-channels-by-gadget-types',
+                'verb'      => ['POST', 'OPTIONS'],
+            ]
+                /*
             [
                 'pattern'   => 'api/v1/general/get-chef-parameter',
                 'route'     => 'rest/channels/channels/get-chef-parameter',
@@ -119,6 +164,24 @@ class Bootstrap implements BootstrapInterface
             'rest/channels/load/day',
             ['POST', 'GET']
         );
+        
+        Router::addGroupUrl('api/v1/user', [
+            [
+                'url' => 'channels/update',
+                'path' => 'rest/user/user/user-channels-update',
+                'verb' => ['POST', 'OPTIONS']
+            ],
+            [
+                'url' => 'list',
+                'path' => 'rest/user/user/get-users',
+                'verb' => ['GET', 'OPTIONS']
+            ],
+            [
+                'url' => 'channels/list',
+                'path' => 'rest/user/user/get-user-channels',
+                'verb' => ['GET', 'OPTIONS']
+            ],
+        ]);
 
         Router::init();
     }
