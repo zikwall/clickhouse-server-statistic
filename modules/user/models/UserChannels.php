@@ -25,7 +25,8 @@ class UserChannels extends ActiveRecord
     {
         return [
             [['user_id', 'channel_id'], 'integer'],
-            [['user_id', 'channel_id'], 'required'],
+            [['label'], 'string'],
+            [['user_id', 'channel_id', 'label'], 'required'],
             [['user_id', 'channel_id'], 'unique', 'targetAttribute' => ['user_id', 'channel_id']],
         ];
     }
