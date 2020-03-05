@@ -177,8 +177,11 @@ class MonitChannels extends CHBaseModel
             return self::execute($query);
     }
     
-    public static function getChannelsUniqUsersByAccount($userChannels, $dayBegin, $dayEnd)
+    public static function getChannelsUniqUsersByAccount($userChannels, $dayBegin, $dayEnd, $forapp)
     {
+        
+        $applist = self::apps($forapp);
+        
         $query = self::find()
                 ->select([
                     'vcid',
@@ -186,6 +189,7 @@ class MonitChannels extends CHBaseModel
                 ])
                 ->from('stat')
                 ->whereIn('vcid', $userChannels)
+                ->whereIn('app', $applist)
                 ->where('day_begin', '>=', $dayBegin)
                 ->where('day_begin', '<=', $dayEnd)
                 ->where('adsst', '=', 'NULL')
@@ -195,14 +199,16 @@ class MonitChannels extends CHBaseModel
         return self::execute($query);
     }
     
-    public static function getChannelsViewDurationWithChannelsId($userChannels, $dayBegin, $dayEnd)
+    public static function getChannelsViewDurationWithChannelsId($userChannels, $dayBegin, $dayEnd, $forapp)
     {
+        $applist = self::apps($forapp);
+
         $query = self::find()
                 ->select([
                     'vcid',
                     raw('groupArray([toString(evtp), toString(ctnarch), toString(ctnonline)]) as groupData')
                 ])
-                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd) {
+                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd, $applist) {
                     $from = $from->query();
 
                     $from
@@ -214,6 +220,7 @@ class MonitChannels extends CHBaseModel
                     ])
                     ->from('stat')
                     ->whereIn('vcid', $userChannels)
+                    ->whereIn('app', $applist)
                     ->where('day_begin', '>=', $dayBegin)
                     ->where('day_begin', '<=', $dayEnd)
                     ->where('adsst', '=', 'NULL')
@@ -226,12 +233,15 @@ class MonitChannels extends CHBaseModel
         return self::execute($query);
     }
     
-    public static function getStartChannelsOfPartner($userChannels, $dayBegin, $dayEnd)
+    public static function getStartChannelsOfPartner($userChannels, $dayBegin, $dayEnd, $forapp)
     {
+        $applist = self::apps($forapp);
+
         $query = self::find()
                 ->select(['vcid', raw('COUNT(*) as cnt')])
                 ->from('stat')
                 ->whereIn('vcid', $userChannels)
+                ->whereIn('app', $applist)
                 ->where('day_begin', '>=', $dayBegin)
                 ->where('day_begin', '<=', $dayEnd)
                 ->where('action', '=', 'opening-channel')
@@ -240,11 +250,13 @@ class MonitChannels extends CHBaseModel
         return self::execute($query);
     }
     
-    public static function getChannelsByGadgetTypes($userChannels, $dayBegin, $dayEnd)
+    public static function getChannelsByGadgetTypes($userChannels, $dayBegin, $dayEnd, $forapp)
     {
+        $applist = self::apps($forapp);
+
         $query = self::find()
                 ->select(['vcid','app', raw('COUNT(DISTINCT device_id) as cnt')])
-                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd) {
+                ->from(function (From $from) use ($userChannels, $dayBegin, $dayEnd, $applist) {
                     $from = $from->query();
                            
                     $from
@@ -255,6 +267,7 @@ class MonitChannels extends CHBaseModel
                         ])
                         ->from('stat')
                         ->whereIn('vcid', $userChannels)
+                        ->whereIn('app', $applist)
                         ->where('day_begin', '>=', $dayBegin)
                         ->where('day_begin', '<=', $dayEnd)
                         //->where('month_begin', '>=', strtotime(date('Y-m-01', $dayBegin)))

@@ -56,8 +56,10 @@ class AdsController extends BaseController
         
         $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
         $userChannelsIds = array_keys($userChannelsFormatedList);
+        
+        $forapp = $userChannels[0]['label'];
 
-        $data = MonitAds::getDataOfPartnerChannels($userChannelsIds, $dayBegin, $dayEnd)->rows;
+        $data = MonitAds::getDataOfPartnerChannels($userChannelsIds, $dayBegin, $dayEnd, $forapp)->rows;
         $arrAdsId = MonitData::getAdsId();
 
         foreach($data as $k => $v) {
