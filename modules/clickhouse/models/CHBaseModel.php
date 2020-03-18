@@ -39,4 +39,29 @@ class CHBaseModel
     }
 
     public final static function all() {}
+    
+    public static function apps($detect) : array
+    {
+        $apps = [];
+        
+        if ($detect == 'mejor') {
+            $apps = [
+                'mejortvios',
+                'tv.mejor.mejortv',
+                'tv.limehd.mejor',
+            ];
+        } elseif ($detect == 'lime') {
+            $apps = [
+                'com.infolink.LimeHDTV',
+                'liteios',
+                'ctvios',
+                'com.infolink.limeiptv',
+                'limehd.ru.lite',
+                'limehd.ru.ctv',
+            ];
+        } 
+        
+        return $apps;
+    }
+    
 }

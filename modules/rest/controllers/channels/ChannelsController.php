@@ -203,9 +203,13 @@ class ChannelsController extends BaseController
         $userChannels = $request->post('userChannels');
         $dayBegin = $request->post('dayBegin');
         $dayEnd = $request->post('dayEnd');
+        
         $userChannelsFormatedList = array_column($userChannels, 'name' ,'id');
         $userChannelsIds = array_keys($userChannelsFormatedList);
-        $data = MonitChannels::getChannelsUniqUsersByAccount($userChannelsIds, $dayBegin, $dayEnd);
+        
+        $forapp = $userChannels[0]['label'];
+        
+        $data = MonitChannels::getChannelsUniqUsersByAccount($userChannelsIds, $dayBegin, $dayEnd, $forapp);
         $channelsUniqUsersByAccount = [];
 
         if (is_null($data)) {
@@ -233,9 +237,13 @@ class ChannelsController extends BaseController
         $userChannels = $request->post('userChannels');
         $dayBegin = $request->post('dayBegin');
         $dayEnd = $request->post('dayEnd');
+        
         $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
         $userChannelsIds = array_keys($userChannelsFormatedList);
-        $data = MonitChannels::getChannelsViewDurationWithChannelsId($userChannelsIds, $dayBegin, $dayEnd);
+        
+        $forapp = $userChannels[0]['label'];
+
+        $data = MonitChannels::getChannelsViewDurationWithChannelsId($userChannelsIds, $dayBegin, $dayEnd, $forapp);
         $channelsData = [];
         
         if (is_null($data)) {
@@ -283,7 +291,10 @@ class ChannelsController extends BaseController
         
         $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
         $userChannelsIds = array_keys($userChannelsFormatedList);
-        $data = MonitChannels::getStartChannelsOfPartner($userChannelsIds, $dayBegin, $dayEnd);
+        
+        $forapp = $userChannels[0]['label'];
+
+        $data = MonitChannels::getStartChannelsOfPartner($userChannelsIds, $dayBegin, $dayEnd, $forapp);
         
         foreach ($data->rows as $key => $item) {
             $startChannels[$item['vcid']]['name'] = $userChannelsFormatedList[$item['vcid']];
@@ -313,7 +324,8 @@ class ChannelsController extends BaseController
         $userChannelsFormatedList = array_column($userChannels, 'name', 'id');
         $userChannelsIds = array_keys($userChannelsFormatedList);
         
-        
+        $forapp = $userChannels[0]['label'];
+
         $groups = [
             'mobile' => [
                 //android
@@ -336,7 +348,7 @@ class ChannelsController extends BaseController
             ]
         ];
 
-        $data = MonitChannels::getChannelsByGadgetTypes($userChannelsIds, $dayBegin, $dayEnd);
+        $data = MonitChannels::getChannelsByGadgetTypes($userChannelsIds, $dayBegin, $dayEnd, $forapp);
         $channelGadgets = [];
 
         foreach ($data->rows as $key => $item) {

@@ -93,21 +93,24 @@ class MonitAds extends CHBaseModel
      * @param type $dayEnd
      * @return type \Tinderbox\Clickhouse\Query\Result
      */
-    public static function getDataOfPartnerChannels($userChannelsIds, $dayBegin, $dayEnd)
+    public static function getDataOfPartnerChannels($userChannelsIds, $dayBegin, $dayEnd, $forapp)
     {
+        $applist = self::apps($forapp);
+
         $query = Monit::find()
                         ->select([
                             'vcid',
                             'adsid',
                             raw('groupArray([toString(adsst), toString(countAdsst)]) as groupData')
                         ])
-                        ->from(function (From $from) use ($userChannelsIds, /* $isAllEventType, */ $dayBegin, $dayEnd) {
+                        ->from(function (From $from) use ($userChannelsIds, /* $isAllEventType, */ $dayBegin, $dayEnd, $applist) {
                             $from->query()->select([
                                 'adsid',
                                 'adsst',
                                 'vcid',
                                 raw('COUNT(adsst) as countAdsst'),
                             ])->from('stat')
+                            ->whereIn('app', $applist)
                             ->where(function (Builder $query) use ($userChannelsIds) {
                                 $query->where('vcid', $userChannelsIds);
                             })

@@ -59,19 +59,20 @@ class UserController extends BaseController
         $insertList = [];
         
         foreach ($channels as $channel) {
-            if (in_array($channel, $userChannels)) {
-               $deleteList[] = $channel;
+            if (in_array($channel['id'], $userChannels)) {
+               $deleteList[] = $channel['id'];
                continue;
             }
             
             $insertList[] = [
                 $userId,
-                $channel
+                $channel['id'],
+                $channel['label'],
             ];
         }
-        
+
         if (sizeof($deleteList) > 0) {
-            UserChannels::deleteAll([
+            $rows = UserChannels::deleteAll([
                 'AND',
                 'user_id' => $userId,
                 ['in', 'channel_id', $deleteList]
@@ -80,7 +81,7 @@ class UserController extends BaseController
         
         if (sizeof($insertList) > 0) {
             Yii::$app->db->createCommand()
-                    ->batchInsert(UserChannels::tableName(),['user_id', 'channel_id'],$insertList)
+                    ->batchInsert(UserChannels::tableName(),['user_id', 'channel_id', 'label'],$insertList)
                     ->execute();
         }
         
@@ -211,16 +212,23 @@ class UserController extends BaseController
 
         $userChannels = UserChannels::findAll(['user_id' => $id]);
         $nameChannels = (array) json_decode(file_get_contents('https://pl.iptv2021.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
+        $mejorChannels = (array) json_decode(file_get_contents('https://vls.iptv2022.com/api/v1/channels?access_token=r0ynhfybabufythekbn'));
 
-        $list = array_map(function($channel) use ($nameChannels) {
+        $list = array_map(function($channel) use ($nameChannels, $mejorChannels) {
+            if ($channel->label == 'lime') {
+                $chName = $nameChannels[$channel->channel_id];
+            } else {
+                $chName = $mejorChannels[$channel->channel_id];
+            }
             $obj = new \stdClass();
             $obj->id = $channel->channel_id;
-            $obj->name = $nameChannels[$channel->channel_id];
+            $obj->name = $chName;
             $obj->checked = false;
+            $obj->label = $channel->label;
             
             return $obj;
         }, $userChannels);
-
+        
         return $this->asJson($list);
     }
 
